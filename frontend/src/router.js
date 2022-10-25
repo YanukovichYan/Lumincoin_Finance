@@ -1,15 +1,11 @@
-// import {Form} from "./components/form.js";
-// import {Choice} from "./components/choice.js";
-// import {Test} from "./components/test.js";
-// import {Result} from "./components/result.js";
-// import {Auth} from "./services/auth.js";
-// import {RightAnswers} from "./components/right-answers.js"
+import {Income} from "./scripts/income.js";
 
 export class Router {
     constructor() {
         this.contentElement = document.getElementById('content')
         // this.stylesElement = document.getElementById('styles')
-        this.titleElement = document.getElementById('page-title')
+        this.pageTitleElement = document.getElementById('page-title')
+        this.mainTitleElement = document.getElementById('main-title')
         this.profileElement = document.getElementById('profile')
         this.profileFullNameElement = document.getElementById('profile-full-name')
 
@@ -19,8 +15,8 @@ export class Router {
                 route: '#/',
                 title: 'Главная',
                 template: 'templates/main.html',
-                // load: () => {
-                // }
+                load: () => {
+                }
             },
             {
                 route: '#/signup',
@@ -43,7 +39,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'templates/income.html',
                 load: () => {
-                    // new Choice();
+                    new Income();
                 }
             },
             {
@@ -55,24 +51,47 @@ export class Router {
                     // new Test();
                 }
             },
-            // {
-            //     route: '#/result',
-            //     title: 'Результаты',
-            //     template: 'templates/result.html',
-            //     styles: 'styles/result.css',
-            //     load: () => {
-            //         new Result();
-            //     }
-            // },
-            // {
-            //     route: '#/right',
-            //     title: 'Результат прохождения теста',
-            //     template: 'templates/right-answers.html',
-            //     styles: 'styles/right-answers.css',
-            //     load: () => {
-            //         new RightAnswers();
-            //     }
-            // },
+            {
+                route: '#/editIncome',
+                title: 'Редактирование категории доходов',
+                template: 'templates/editIncome.html',
+                load: () => {
+                    // new Result();
+                }
+            },
+            {
+                route: '#/expenses',
+                title: 'Расходы',
+                template: 'templates/expenses.html',
+                // styles: 'styles/right-answers.css',
+                load: () => {
+                    // new RightAnswers();
+                }
+            },
+            {
+                route: '#/createExpenses',
+                title: 'Создание категории расходов',
+                template: 'templates/createExpenses.html',
+                load: () => {
+                    // new RightAnswers();
+                }
+            },
+            {
+                route: '#/editExpenses',
+                title: 'Редактирование категории расходов',
+                template: 'templates/editExpenses.html',
+                load: () => {
+                    // new RightAnswers();
+                }
+            },
+            {
+                route: '#/tableIncome&expenses',
+                title: 'Доходы и расходы',
+                template: 'templates/tableIncome&expenses.html',
+                load: () => {
+                    // new RightAnswers();
+                }
+            },
         ]
     }
 
@@ -90,8 +109,9 @@ export class Router {
             return item.route === urlRoute
         });
 
-        if (urlRoute === '#/login') {
+        if (urlRoute === '#/login' || urlRoute === '#/signup') {
             document.getElementById('sidebar').style.cssText = 'display:none!important'
+            document.getElementById('wrapper').style.cssText = 'display:block!important'
         }
 
         if (!newRoute) {
@@ -115,8 +135,9 @@ export class Router {
         // }
         //
 
-        // newRoute.load()
+        newRoute.load()
 
-        this.titleElement.innerText = newRoute.title
+        this.pageTitleElement.innerText = newRoute.title
+        this.mainTitleElement.innerText = newRoute.title
     }
 }

@@ -6,17 +6,29 @@
         <h2 class="mb-3 text-center">Вход</h2>
 
         <div style="width: 397px" class="mb-4">
-            <input type="text" class="form-control mb-2" placeholder="Электронная почта">
-            <input type="text" class="form-control mb-2" placeholder="Пароль">
+            <div class="input-group mb-2">
+                <div class="input-group-text">
+                    <img src="static/images/icon-mail.png" alt="mail">
+                </div>
+                <input type="text" class="form-control" placeholder="Электронная почта" aria-label="Input group example" aria-describedby="btnGroupAddon">
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-text">
+                    <img src="static/images/icon-lock.png" alt="lock">
+                </div>
+                <input type="text" class="form-control" placeholder="Пароль" aria-label="Input group example" aria-describedby="btnGroupAddon">
+            </div>
             <label role='button'>
                 <input type="checkbox">
                 <strong>Запомнить меня</strong>
             </label>
         </div>
         <button type="button" class="btn btn-primary">Войти</button>
-
+        <div class="mt-2">
+            <strong>Ещё нет аккаунта?</strong>
+            <span><a href="/#">Пройдите регистрацию</a></span>
+        </div>
     </div>
 
 </div>
 
-<!--style="max-width: 397px"-->

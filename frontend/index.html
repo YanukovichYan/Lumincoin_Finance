@@ -38,29 +38,33 @@
                 </button>
                 <div class="collapse rounded-bottom border border-primary" id="dashboard-collapse" style="">
                     <ul class="btn-toggle-nav list-unstyled small">
-                        <li class="p-2"><a href="#/income" class="link-dark text-decoration-none rounded">Доходы</a></li>
-                        <li class="p-2"><a href="#/expenses" class="link-dark text-decoration-none rounded">Расходы</a></li>
+                        <li class="p-2"><a href="#/income" class="link-dark text-decoration-none rounded">Доходы</a>
+                        </li>
+                        <li class="p-2"><a href="#/expenses" class="link-dark text-decoration-none rounded">Расходы</a>
+                        </li>
                     </ul>
                 </div>
             </li>
         </ul>
-        <div>
-            <strong class="me-1">Баланс:</strong>
-            <span class="text-primary">500$</span>
-        </div>
-        <hr>
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
-               data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="static/images/avatar.png" alt="" width="36" height="36" class="rounded-circle me-2">
-                <strong>Yan</strong>
-            </a>
-            <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
-            </ul>
+        <div id="profile">
+            <div>
+                <strong class="me-1">Баланс:</strong>
+                <span class="text-primary">500$</span>
+            </div>
+            <hr>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="static/images/avatar.png" alt="" width="36" height="36" class="rounded-circle me-2">
+                    <strong id="profile-name"></strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow">
+                    <a href="#/logout" id="logout" class="dropdown-item">Logout</a>
+                </ul>
+            </div>
         </div>
     </div>
-    <div id="wrapper-content" class="vh-100 my-5 py-5 mx-5 px-2">
+    <div id="wrapper-content" class="vh-100 w-100 my-5 py-5 mx-5 px-2">
         <div id="main-title" class="fs-1 fw-bold mb-5"></div>
         <div id="content"></div>
     </div>

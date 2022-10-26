@@ -1,15 +1,15 @@
 import {Income} from "./scripts/income.js";
-import {Login} from "./scripts/login.js";
 import {Form} from "./scripts/form.js";
+import {Auth} from "./services/auth.js";
+import {CreateIncome} from "./scripts/createIncome.js";
 
 export class Router {
     constructor() {
         this.contentElement = document.getElementById('content')
-        // this.stylesElement = document.getElementById('styles')
         this.pageTitleElement = document.getElementById('page-title')
         this.mainTitleElement = document.getElementById('main-title')
         this.profileElement = document.getElementById('profile')
-        this.profileFullNameElement = document.getElementById('profile-full-name')
+        this.profileNameElement = document.getElementById('profile-name')
 
 
         this.routes = [
@@ -18,6 +18,7 @@ export class Router {
                 title: 'Главная',
                 template: 'templates/main.html',
                 load: () => {
+                    // new Main()
                 }
             },
             {
@@ -48,9 +49,8 @@ export class Router {
                 route: '#/createIncome',
                 title: 'Создание категории доходов',
                 template: 'templates/createIncome.html',
-                // styles: 'styles/test.css',
                 load: () => {
-                    // new Test();
+                    new CreateIncome();
                 }
             },
             {
@@ -65,7 +65,6 @@ export class Router {
                 route: '#/expenses',
                 title: 'Расходы',
                 template: 'templates/expenses.html',
-                // styles: 'styles/right-answers.css',
                 load: () => {
                     // new RightAnswers();
                 }
@@ -100,18 +99,16 @@ export class Router {
 
     async openRoute() {
         const urlRoute = window.location.hash.split('?')[0]
-        //
-        // if (urlRoute === '#/logout') {
-        //    await Auth.logout()
-        //     window.location.href = '#/'
-        //     return
-        // }
-        //
+
+        if (urlRoute === '#/logout') {
+           await Auth.logout()
+            window.location.href = '#/login'
+            return
+        }
+
         const newRoute = this.routes.find(item => {
             return item.route === urlRoute
         });
-
-
 
 
         if (!newRoute) {
@@ -123,30 +120,33 @@ export class Router {
         this.contentElement.innerHTML =
             await fetch(newRoute.template).then(response => response.text())
 
-        // this.stylesElement.setAttribute('href', newRoute.styles)
-
-        // const userInfo = Auth.getUserInfo()
-        // const accessInfo = localStorage.getItem(Auth.accessTokenKey)
-        // if (userInfo && accessInfo) {
-        //     this.profileElement.style.display = 'flex'
-        //     this.profileFullNameElement.innerText = userInfo.fullName
-        // } else {
-        //     this.profileElement.style.display = 'none '
-        // }
-        //
-
         newRoute.load()
 
         this.pageTitleElement.innerText = newRoute.title
 
-
         this.mainTitleElement.innerText = newRoute.title
+
+        const userInfo = Auth.getUserInfo()
+        const accessToken = localStorage.getItem(Auth.accessTokenKey)
+
+        if (userInfo && accessToken) {
+            this.profileElement.style.display = 'block'
+            this.profileNameElement.innerText = userInfo.name
+        } else {
+            this.profileElement.style.display = 'none '
+        }
+
 
         if (urlRoute === '#/login' || urlRoute === '#/signup') {
             document.getElementById('sidebar').style.cssText = 'display:none!important'
             document.getElementById('wrapper').style.cssText = 'display:block!important'
             document.getElementById('wrapper-content').style.cssText = `margin:0!important; padding:0!important`
             this.mainTitleElement.style.cssText = 'display:none!important'
+        } else {
+            document.getElementById('sidebar').style.cssText = 'display:flex!important'
+            document.getElementById('wrapper').style.cssText = 'display:flex!important'
+            document.getElementById('wrapper-content').style.cssText = `margin:unset; padding:unset`
+            this.mainTitleElement.style.cssText = 'display:block!important'
         }
 
 

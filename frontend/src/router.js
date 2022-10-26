@@ -1,4 +1,6 @@
 import {Income} from "./scripts/income.js";
+import {Login} from "./scripts/login.js";
+import {Form} from "./scripts/form.js";
 
 export class Router {
     constructor() {
@@ -22,17 +24,17 @@ export class Router {
                 route: '#/signup',
                 title: 'Регистрация',
                 template: 'templates/signup.html',
-                // load: () => {
-                //     new Form('signup');
-                // }
+                load: () => {
+                    new Form('signup');
+                }
             },
             {
                 route: '#/login',
                 title: 'Вход в систему',
                 template: 'templates/login.html',
-                // load: () => {
-                //     new Form('login');
-                // }
+                load: () => {
+                    new Form('login');
+                }
             },
             {
                 route: '#/income',
@@ -109,10 +111,8 @@ export class Router {
             return item.route === urlRoute
         });
 
-        if (urlRoute === '#/login' || urlRoute === '#/signup') {
-            document.getElementById('sidebar').style.cssText = 'display:none!important'
-            document.getElementById('wrapper').style.cssText = 'display:block!important'
-        }
+
+
 
         if (!newRoute) {
             window.location.href = '#/'
@@ -138,6 +138,17 @@ export class Router {
         newRoute.load()
 
         this.pageTitleElement.innerText = newRoute.title
+
+
         this.mainTitleElement.innerText = newRoute.title
+
+        if (urlRoute === '#/login' || urlRoute === '#/signup') {
+            document.getElementById('sidebar').style.cssText = 'display:none!important'
+            document.getElementById('wrapper').style.cssText = 'display:block!important'
+            document.getElementById('wrapper-content').style.cssText = `margin:0!important; padding:0!important`
+            this.mainTitleElement.style.cssText = 'display:none!important'
+        }
+
+
     }
 }

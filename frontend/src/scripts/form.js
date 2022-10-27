@@ -14,7 +14,6 @@ export class Form {
             return
         }
 
-
         this.fields = [
             {
                 name: 'email',
@@ -54,15 +53,19 @@ export class Form {
         }
 
         document.getElementById('eye').onclick = () => {
-            myFunction()
+            viewPassword()
         }
-        function myFunction() {
-            let x = document.getElementById("password");
-            if (x.getAttribute('type') === 'password') {
-                x.setAttribute('type', 'text')
+        function viewPassword() {
+            let inputPassword = document.getElementById("password");
+            if (inputPassword.getAttribute('type') === 'password') {
+                inputPassword.setAttribute('type', 'text')
             } else {
-                x.setAttribute('type', 'password')
+                inputPassword.setAttribute('type', 'password')
             }
+
+            setTimeout(() => {
+                inputPassword.setAttribute('type', 'password')
+            }, 1900)
         }
 
         const that = this;
@@ -123,7 +126,7 @@ export class Form {
             try {
                 const result = await CustomHttp.request(`${config.host}/signup`, 'POST', {
                     name: this.fields.find(item => item.name === 'name').element.value,
-                    lastName: "Роман",
+                    lastName: "lastName",
                     email: email,
                     password: password,
                     passwordRepeat: this.fields.find(item => item.name === 'password-repeat').element.value
@@ -161,7 +164,7 @@ export class Form {
                 }
                 Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken)
                 Auth.setUserInfo(result.user)
-                alert("Все успешно вошли в аккаунт!")
+                alert("Вы успешно вошли в аккаунт!")
                 location.href = '#/main'
             }
 

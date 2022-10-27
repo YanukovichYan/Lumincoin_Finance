@@ -1,6 +1,7 @@
 import {Router} from './router.js'
 import {CustomHttp} from "./services/custom-http.js";
 import config from "../config/config.js";
+import {Auth} from "./services/auth.js";
 
 class App {
     constructor() {
@@ -15,15 +16,21 @@ class App {
     }
 
     async getBalance() {
-        try {
-            const result = await CustomHttp.request(`${config.host}/balance`)
-            document.getElementById('balance').innerText = `${result.balance}$`
-        } catch (e) {
-            console.log(e)
+
+        // if (localStorage.getItem(Auth.accessTokenKey) === null) {
+        //     location.href = '#/login'
+        // }
+
+        if (localStorage.getItem(Auth.accessTokenKey)) {
+
+            try {
+                const result = await CustomHttp.request(`${config.host}/balance`)
+                document.getElementById('balance').innerText = `${result.balance}$`
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
-
-
 }
 
 

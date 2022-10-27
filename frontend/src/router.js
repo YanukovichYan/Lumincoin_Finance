@@ -100,6 +100,10 @@ export class Router {
     async openRoute() {
         const urlRoute = window.location.hash.split('?')[0]
 
+        // console.log(localStorage.getItem(Auth.accessTokenKey))
+
+
+
         if (urlRoute === '#/logout') {
             await Auth.logout()
             window.location.href = '#/login'

@@ -70,7 +70,6 @@ export class Income {
                     alert(result.message)
                     throw new Error(result.message)
                 }
-                console.log(result)
                 location.href = `#/${this.urlParams}`
 
             }

@@ -47,26 +47,37 @@ export class Auth {
     }
 
     static async refresh() {
+        const refreshToken = localStorage.getItem(this.refreshTokenKey)
 
-        const response = await fetch(`${config.host}/refresh`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({refreshToken: localStorage.getItem(this.refreshTokenKey)})
-        })
+        if (refreshToken) {
 
-        if (response && response.status === 200) {
-            const result = await response.json()
-            console.log(result)
-            if (result) {
-                if (result.error) {
-                    console.log("result", result)
+            const response = await fetch(`${config.host}/refresh`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({refreshToken: localStorage.getItem(this.refreshTokenKey)})
+            })
+
+            if (response && response.status === 200) {
+                const result = await response.json()
+                console.log(result)
+                if (result) {
+                    if (result.error) {
+                        console.log("Записываю в localStorage", result)
+                    }
+                    // Тут проверить
+                    this.setTokens(result.tokens.accessToken, result.tokens.refreshToken)
+                    return true
                 }
             }
+            alert("RefreshToken = null || expired. --- Пройдите регистрацию")
         }
-        alert("RefreshToken = null || expired. Пройдите регистрацию")
-    }
+        // И это проверить
 
+        // this.removeTokens()
+        // location.href = '#/'
+        // return false
+    }
 }

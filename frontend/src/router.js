@@ -42,7 +42,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'templates/income.html',
                 load: () => {
-                    new Income();
+                    new Income('income');
                 }
             },
             {
@@ -50,7 +50,7 @@ export class Router {
                 title: 'Создание категории доходов',
                 template: 'templates/createIncome.html',
                 load: () => {
-                    new CreateIncome();
+                    new Income('createIncome');
                 }
             },
             {

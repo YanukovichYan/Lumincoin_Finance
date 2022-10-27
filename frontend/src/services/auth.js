@@ -59,8 +59,14 @@ export class Auth {
 
         if (response && response.status === 200) {
             const result = await response.json()
-            console.log("refresh", result)
+            console.log(result)
+            if (result) {
+                if (result.error) {
+                    console.log("result", result)
+                }
+            }
         }
+        alert("RefreshToken = null || expired. Пройдите регистрацию")
     }
 
 }

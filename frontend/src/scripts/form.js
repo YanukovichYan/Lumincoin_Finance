@@ -7,6 +7,13 @@ export class Form {
     constructor(page) {
         this.page = page
         this.agreeElement = document.getElementById('agree')
+        this.processButton = document.getElementById('process')
+
+        if (localStorage.getItem(Auth.accessTokenKey)) {
+            location.href = '#/main'
+            return
+        }
+
 
         this.fields = [
             {
@@ -46,6 +53,18 @@ export class Form {
             )
         }
 
+        document.getElementById('eye').onclick = () => {
+            myFunction()
+        }
+        function myFunction() {
+            let x = document.getElementById("password");
+            if (x.getAttribute('type') === 'password') {
+                x.setAttribute('type', 'text')
+            } else {
+                x.setAttribute('type', 'password')
+            }
+        }
+
         const that = this;
 
         this.fields.forEach(item => {
@@ -53,19 +72,21 @@ export class Form {
 
             item.element.onchange = function () {
                 that.validateField.call(that, item, this)
-                console.log("that", that)
-                console.log("item", item)
-                console.log("this", this)
+                // console.log("that", that)
+                // console.log("item", item)
+                // console.log("this", this)
             }
         })
 
-
-
-        document.getElementById('process').onclick = function () {
+        this.processButton.onclick = function () {
             that.processSignup()
         }
 
-        this.validateForm()
+        if (page === 'signup') {
+            this.agreeElement.onchange = function () {
+                that.validateForm()
+            }
+        }
     }
 
     validateField(field, element) {
@@ -84,9 +105,13 @@ export class Form {
     validateForm() {
         const validForm = this.fields.every((item) => item.valid)
 
-        // const isValid =
-
-
+        const isValid = this.agreeElement ? this.agreeElement.checked && validForm : validForm
+        if (isValid) {
+            this.processButton.removeAttribute('disabled')
+        } else {
+            this.processButton.setAttribute('disabled', 'disabled')
+        }
+        return isValid
     }
 
     async processSignup() {
@@ -113,11 +138,9 @@ export class Form {
                         throw new Error(result.message)
                     } else if (result.user) {
                         alert('Registration completed successfully')
-                        window.location.href = "#/login"
+                        window.location.href = "#/main"
                     }
                 }
-                // console.log(result)
-
             } catch (e) {
                 console.log("123", e)
             }

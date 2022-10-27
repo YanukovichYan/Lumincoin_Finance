@@ -4,14 +4,19 @@ import config from "../../config/config.js";
 export class Income {
 
     constructor(page) {
-
         this.page = page
         this.incomes = null
         this.cardRemoveButton = null
         this.removeCardId = null
+        this.editCardId = null
+        this.urlParams = null
+        if (this.page === "create-income") {
+            this.urlParams = 'income'
+        } else {
+            this.urlParams = 'expense'
+        }
 
-
-        if (this.page === 'createIncome') {
+        if (this.page === 'create-income' || this.page === 'create-expense') {
 
             this.createButton = document.getElementById('create-button')
             this.createInput = document.getElementById('create-input')
@@ -26,22 +31,14 @@ export class Income {
                 location.href = '#/income'
             }
 
-
         } else {
-            document.getElementById('create-income').onclick = () => {
-                location.href = '#/createIncome'
-            }
-
             this.init()
         }
-
     }
 
     async init() {
-
         try {
-            const result = await CustomHttp.request(`${config.host}/categories/income`)
-
+            const result = await CustomHttp.request(`${config.host}/categories/${this.page}`)
             if (result) {
                 this.incomes = result
                 if (result.length === 0) {
@@ -50,24 +47,31 @@ export class Income {
                 }
                 this.showIncomeCategories()
             }
-
         } catch (e) {
             console.log(e)
         }
+
+        if (this.page === 'income' || this.page === 'expense') {
+            document.getElementById('create-income').onclick = () => {
+                location.href = `#/create-${this.page}`
+            }
+        }
+
     }
 
     async createIncome() {
         try {
-            const result = await CustomHttp.request(`${config.host}/categories/income`, "POST", {
+            const result = await CustomHttp.request(`${config.host}/categories/${this.urlParams}`, "POST", {
                 title: this.createInput.value
             })
+
             if (result) {
                 if (result.error) {
                     alert(result.message)
                     throw new Error(result.message)
                 }
                 console.log(result)
-                location.href = '#/income'
+                location.href = `#/${this.urlParams}`
 
             }
         } catch (e) {
@@ -93,6 +97,8 @@ export class Income {
                 const cardEditButton = document.createElement('button')
                 cardEditButton.innerText = "Редактировать"
                 cardEditButton.className = `btn btn-primary me-2`
+                cardEditButton.setAttribute('data-id', income.id)
+                cardEditButton.setAttribute('data-name', "edit")
 
                 this.cardRemoveButton = document.createElement('button')
                 this.cardRemoveButton.innerText = "Удалить"
@@ -108,36 +114,53 @@ export class Income {
                 cardWrapper.prepend(card)
             })
         }
+        this.removeCard()
+        this.editCard()
+    }
 
+    removeCard() {
         let removeButtons = document.querySelectorAll('.btn-danger')
 
-        removeButtons.forEach(removeButton => {
-
-            removeButton.addEventListener('click', (e) => {
-                this.removeCardId = removeButton.getAttribute('data-id')
+        removeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.removeCardId = btn.getAttribute('data-id')
                 console.log("this.removeCardId", this.removeCardId)
-
             })
         })
 
-        document.getElementById('confirmDelete').onclick = () => {
-            this.removeCard()
+        document.getElementById('confirm-delete').onclick = () => {
+            this.removeRequest()
         }
 
-
+        document.getElementById('cancel-delete').onclick = () => {
+            location.reload()
+        }
     }
 
-    async removeCard() {
+    async removeRequest() {
         try {
-            const result = await CustomHttp.request(`${config.host}/categories/income/${this.removeCardId}`, 'DELETE')
+            const result = await CustomHttp.request(`${config.host}/categories/${this.page}/${this.removeCardId}`, 'DELETE')
             if (result) {
                 if (!result.error) {
                     location.reload()
                 }
-                // alert(result.message)
+                alert(result.message)
             }
         } catch (e) {
             console.log(e)
         }
     }
+
+    editCard() {
+        let editButtons = document.querySelectorAll('button[data-name="edit"]')
+
+        editButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.editCardId = btn.getAttribute('data-id')
+                location.href = `#/edit-${this.page}?id=${this.editCardId}`
+            })
+        })
+
+    }
+
 }

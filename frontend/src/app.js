@@ -1,4 +1,6 @@
 import {Router} from './router.js'
+import {CustomHttp} from "./services/custom-http.js";
+import config from "../config/config.js";
 
 class App {
     constructor() {
@@ -9,7 +11,16 @@ class App {
 
     handleRouteChanging() {
         this.router.openRoute();
+        this.getBalance()
+    }
 
+    async getBalance() {
+        try {
+            const result = await CustomHttp.request(`${config.host}/balance`)
+            document.getElementById('balance').innerText = `${result.balance}$`
+        } catch (e) {
+            console.log(e)
+        }
     }
 
 

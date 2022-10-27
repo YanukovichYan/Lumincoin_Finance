@@ -23,7 +23,11 @@ export class CustomHttp {
 
         const response = await fetch(url, params)
         if (response.status < 200 || response.status >= 300) {
-            alert(response.statusText)
+            if (response) {
+                if (response.statusText) {
+                    // alert(response.statusText)
+                }
+            }
             if (response.status === 401) {
                 const result = await Auth.refresh()
                 if (result) {
@@ -35,7 +39,7 @@ export class CustomHttp {
             if (response.message) {
                 alert(response.message)
             }
-            throw new Error(response.message)
+            // throw new Error(response.message)
         }
         return await response.json()
     }

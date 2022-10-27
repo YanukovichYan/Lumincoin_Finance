@@ -1,7 +1,7 @@
 import {Income} from "./scripts/income.js";
 import {Form} from "./scripts/form.js";
 import {Auth} from "./services/auth.js";
-import {CreateIncome} from "./scripts/createIncome.js";
+import {Edit} from "./scripts/edit.js";
 
 export class Router {
     constructor() {
@@ -14,17 +14,9 @@ export class Router {
 
         this.routes = [
             {
-                route: '#/',
-                title: 'Главная',
-                template: 'templates/main.html',
-                load: () => {
-                    // new Main()
-                }
-            },
-            {
                 route: '#/signup',
                 title: 'Регистрация',
-                template: 'templates/signup.html',
+                template: 'templates/auth/signup.html',
                 load: () => {
                     new Form('signup');
                 }
@@ -32,9 +24,17 @@ export class Router {
             {
                 route: '#/login',
                 title: 'Вход в систему',
-                template: 'templates/login.html',
+                template: 'templates/auth/login.html',
                 load: () => {
                     new Form('login');
+                }
+            },
+            {
+                route: '#/',
+                title: 'Главная',
+                template: 'templates/main.html',
+                load: () => {
+                    // new Main()
                 }
             },
             {
@@ -46,43 +46,43 @@ export class Router {
                 }
             },
             {
-                route: '#/createIncome',
+                route: '#/create-income',
                 title: 'Создание категории доходов',
                 template: 'templates/createIncome.html',
                 load: () => {
-                    new Income('createIncome');
+                    new Income('create-income');
                 }
             },
             {
-                route: '#/editIncome',
+                route: '#/edit-income',
                 title: 'Редактирование категории доходов',
                 template: 'templates/editIncome.html',
                 load: () => {
-                    // new Result();
+                    new Edit('income');
                 }
             },
             {
-                route: '#/expenses',
+                route: '#/expense',
                 title: 'Расходы',
-                template: 'templates/expenses.html',
+                template: 'templates/income.html',
                 load: () => {
-                    // new RightAnswers();
+                    new Income('expense');
                 }
             },
             {
-                route: '#/createExpenses',
+                route: '#/create-expense',
                 title: 'Создание категории расходов',
-                template: 'templates/createExpenses.html',
+                template: 'templates/createIncome.html',
                 load: () => {
-                    // new RightAnswers();
+                    new Income('create-expense');
                 }
             },
             {
-                route: '#/editExpenses',
+                route: '#/edit-expense',
                 title: 'Редактирование категории расходов',
-                template: 'templates/editExpenses.html',
+                template: 'templates/editIncome.html',
                 load: () => {
-                    // new RightAnswers();
+                    new Edit('expense');
                 }
             },
             {
@@ -101,7 +101,7 @@ export class Router {
         const urlRoute = window.location.hash.split('?')[0]
 
         if (urlRoute === '#/logout') {
-           await Auth.logout()
+            await Auth.logout()
             window.location.href = '#/login'
             return
         }

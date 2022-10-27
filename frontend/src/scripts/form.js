@@ -155,8 +155,6 @@ export class Form {
                 rememberMe: false
             })
 
-            console.log('Form', result)
-
             if (result) {
                 if (result.error) {
                     alert(result.message)

@@ -1,7 +1,9 @@
-import {Category} from "../src/scripts/category.js";
+import {Category} from "../src/scripts/incomes-and-expenses/category.js";
 import {Form} from "../src/scripts/form.js";
 import {Auth} from "../services/auth.js";
-import {Edit} from "../src/scripts/edit.js";
+import {Edit} from "../src/scripts/incomes-and-expenses/edit.js";
+import {TableCategories} from "../src/scripts/table-categories/table-categories.js";
+import {Create_incomeOrExpenses} from "../src/scripts/table-categories/create_income-or-expenses.js";
 
 export class Router {
     constructor() {
@@ -86,11 +88,27 @@ export class Router {
                 }
             },
             {
-                route: '#/tableIncome&expenses',
+                route: '#/table-categories',
                 title: 'Доходы и расходы',
-                template: 'src/templates/table-categories.html',
+                template: 'src/templates/table-categories/table-categories.html',
                 load: () => {
-                    // new RightAnswers();
+                    new TableCategories();
+                }
+            },
+            {
+                route: '#/create_income-or-expenses',
+                title: 'Создание дохода/расхода',
+                template: 'src/templates/table-categories/create_income-or-expenses.html',
+                load: () => {
+                    new Create_incomeOrExpenses('create');
+                }
+            },
+            {
+                route: '#/edit_income-or-expense',
+                title: 'Редактирование дохода/расхода',
+                template: 'src/templates/table-categories/create_income-or-expenses.html',
+                load: () => {
+                    new Create_incomeOrExpenses('edit');
                 }
             },
         ]

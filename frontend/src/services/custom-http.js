@@ -24,16 +24,16 @@ export class CustomHttp {
         const response = await fetch(url, params)
 
         if (response.status < 200 || response.status >= 300) {
-            console.log("response", response)
+            // console.log("response", response)
             if (response) {
                 if (response.statusText) {
                     alert(response.statusText)
                 }
             }
             if (response.status === 401) {
-                console.log("HERE")
+                // console.log("HERE")
                 const result = await Auth.refresh()
-                console.log('result', result)
+                // console.log('result', result)
                 if (result) {
                     return await this.request(url, method, body)
                 } else {

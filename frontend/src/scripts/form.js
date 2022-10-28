@@ -37,7 +37,7 @@ export class Form {
                     name: 'name',
                     id: 'name',
                     element: null,
-                    regex: /^[А-ЯA-Z][а-яa-z]+\s*$/,
+                    regex: /^[А-ЯA-Z][а-яa-z]+\s*[А-ЯA-Z][а-яa-z]+\s*[А-ЯA-Z][а-яa-z]+\s*$/,
                     valid: false
                 }
             )
@@ -93,12 +93,16 @@ export class Form {
     }
 
     validateField(field, element) {
+
+        // console.log("FIO - ", fio)
+        // console.log("arrFio - ", arrFio)
+
         if (!element.value || !element.value.match(field.regex)) {
-            console.log('RED')
+            // console.log('RED')
             element.style.borderColor = 'red'
             field.valid = false
         } else {
-            console.log("GREEN")
+            // console.log("GREEN")
             element.style.borderColor = '#ced4da'
             field.valid = true
         }
@@ -121,12 +125,14 @@ export class Form {
 
         const email = this.fields.find(item => item.name === 'email').element.value
         const password = this.fields.find(item => item.name === 'password').element.value
+        const fio = this.fields.find(item => item.name === 'name').element.value
+        const arrFio = fio.split(' ')
 
         if (this.page === 'signup') {
             try {
                 const result = await CustomHttp.request(`${config.host}/signup`, 'POST', {
-                    name: this.fields.find(item => item.name === 'name').element.value,
-                    lastName: "lastName",
+                    name: arrFio[1],
+                    lastName: arrFio[0],
                     email: email,
                     password: password,
                     passwordRepeat: this.fields.find(item => item.name === 'password-repeat').element.value

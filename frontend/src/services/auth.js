@@ -57,27 +57,28 @@ export class Auth {
                     'Content-type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({refreshToken: localStorage.getItem(this.refreshTokenKey)})
+                body: JSON.stringify({refreshToken: refreshToken})
             })
 
             if (response && response.status === 200) {
                 const result = await response.json()
-                console.log(result)
+                // console.log(result)
                 if (result) {
                     if (result.error) {
-                        console.log("Записываю в localStorage", result)
+                        console.log("Ошибка refreshToken-a")
                     }
-                    // Тут проверить
+                    // console.log("Записываю в localStorage", result)
                     this.setTokens(result.tokens.accessToken, result.tokens.refreshToken)
                     return true
+                } else {
+                    alert("RefreshToken = null || expired. --- Пройдите регистрацию")
                 }
             }
-            alert("RefreshToken = null || expired. --- Пройдите регистрацию")
         }
-        // И это проверить
+        // для чего эти 3 строчки?
 
-        // this.removeTokens()
-        // location.href = '#/'
-        // return false
+        this.removeTokens()
+        location.href = '#/signup'
+        return false
     }
 }

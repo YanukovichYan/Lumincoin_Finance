@@ -1,7 +1,7 @@
-import {Income} from "./scripts/income.js";
-import {Form} from "./scripts/form.js";
-import {Auth} from "./services/auth.js";
-import {Edit} from "./scripts/edit.js";
+import {Category} from "../src/scripts/category.js";
+import {Form} from "../src/scripts/form.js";
+import {Auth} from "../services/auth.js";
+import {Edit} from "../src/scripts/edit.js";
 
 export class Router {
     constructor() {
@@ -16,7 +16,7 @@ export class Router {
             {
                 route: '#/signup',
                 title: 'Регистрация',
-                template: 'templates/auth/signup.html',
+                template: 'src/templates/auth/signup.html',
                 load: () => {
                     new Form('signup');
                 }
@@ -24,7 +24,7 @@ export class Router {
             {
                 route: '#/login',
                 title: 'Вход в систему',
-                template: 'templates/auth/login.html',
+                template: 'src/templates/auth/login.html',
                 load: () => {
                     new Form('login');
                 }
@@ -32,7 +32,7 @@ export class Router {
             {
                 route: '#/',
                 title: 'Главная',
-                template: 'templates/main.html',
+                template: 'src/templates/main/main.html',
                 load: () => {
                     // new Main()
                 }
@@ -40,23 +40,23 @@ export class Router {
             {
                 route: '#/income',
                 title: 'Доходы',
-                template: 'templates/income.html',
+                template: 'src/templates/incomes-and-expenses/category.html',
                 load: () => {
-                    new Income('income');
+                    new Category('income');
                 }
             },
             {
                 route: '#/create-income',
                 title: 'Создание категории доходов',
-                template: 'templates/createIncome.html',
+                template: 'src/templates/incomes-and-expenses/create-category.html',
                 load: () => {
-                    new Income('create-income');
+                    new Category('create-income');
                 }
             },
             {
                 route: '#/edit-income',
                 title: 'Редактирование категории доходов',
-                template: 'templates/editIncome.html',
+                template: 'src/templates/incomes-and-expenses/edit-category.html',
                 load: () => {
                     new Edit('income');
                 }
@@ -64,23 +64,23 @@ export class Router {
             {
                 route: '#/expense',
                 title: 'Расходы',
-                template: 'templates/income.html',
+                template: 'src/templates/incomes-and-expenses/category.html',
                 load: () => {
-                    new Income('expense');
+                    new Category('expense');
                 }
             },
             {
                 route: '#/create-expense',
                 title: 'Создание категории расходов',
-                template: 'templates/createIncome.html',
+                template: 'src/templates/incomes-and-expenses/create-category.html',
                 load: () => {
-                    new Income('create-expense');
+                    new Category('create-expense');
                 }
             },
             {
                 route: '#/edit-expense',
                 title: 'Редактирование категории расходов',
-                template: 'templates/editIncome.html',
+                template: 'src/templates/incomes-and-expenses/edit-category.html',
                 load: () => {
                     new Edit('expense');
                 }
@@ -88,7 +88,7 @@ export class Router {
             {
                 route: '#/tableIncome&expenses',
                 title: 'Доходы и расходы',
-                template: 'templates/tableIncome&expenses.html',
+                template: 'src/templates/table-categories.html',
                 load: () => {
                     // new RightAnswers();
                 }
@@ -100,9 +100,13 @@ export class Router {
     async openRoute() {
         const urlRoute = window.location.hash.split('?')[0]
 
-        // console.log(localStorage.getItem(Auth.accessTokenKey))
+        let accessTokenKey = localStorage.getItem(Auth.accessTokenKey)
 
-
+        if (accessTokenKey === null && urlRoute !== '#/login' && urlRoute !== '#/signup') {
+            alert('Нет токенов, необходимо войти или зарегистрироваться')
+            window.location.href = '#/login'
+            return
+        }
 
         if (urlRoute === '#/logout') {
             await Auth.logout()

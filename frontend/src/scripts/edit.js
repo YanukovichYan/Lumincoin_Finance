@@ -1,4 +1,4 @@
-import {CustomHttp} from "../services/custom-http.js";
+import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../config/config.js";
 
 export class Edit {
@@ -27,7 +27,6 @@ export class Edit {
 
         this.editInput.onchange = (e) => {
             this.newValueOnInput = e.target.value
-            console.log(this.newValueOnInput)
         }
 
 

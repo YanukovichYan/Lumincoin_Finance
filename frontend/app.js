@@ -1,6 +1,6 @@
-import {Router} from './router.js'
+import {Router} from './routes/router.js'
 import {CustomHttp} from "./services/custom-http.js";
-import config from "../config/config.js";
+import config from "./config/config.js";
 import {Auth} from "./services/auth.js";
 
 class App {

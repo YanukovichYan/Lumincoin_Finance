@@ -1,4 +1,4 @@
-import config from "../../config/config.js";
+import config from "../config/config.js";
 
 export class Auth {
 
@@ -75,10 +75,12 @@ export class Auth {
                 }
             }
         }
+        // localStorage.removeItem(this.userInfoKey)
+
         // для чего эти 3 строчки?
 
-        this.removeTokens()
-        location.href = '#/signup'
-        return false
+        // this.removeTokens()
+        // location.href = '#/login'
+        // return false
     }
 }

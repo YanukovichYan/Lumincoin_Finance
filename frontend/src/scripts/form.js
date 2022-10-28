@@ -1,6 +1,6 @@
-import {CustomHttp} from "../services/custom-http.js";
+import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../config/config.js";
-import {Auth} from "../services/auth.js";
+import {Auth} from "../../services/auth.js";
 
 export class Form {
 
@@ -55,6 +55,7 @@ export class Form {
         document.getElementById('eye').onclick = () => {
             viewPassword()
         }
+
         function viewPassword() {
             let inputPassword = document.getElementById("password");
             if (inputPassword.getAttribute('type') === 'password') {
@@ -94,9 +95,6 @@ export class Form {
 
     validateField(field, element) {
 
-        // console.log("FIO - ", fio)
-        // console.log("arrFio - ", arrFio)
-
         if (!element.value || !element.value.match(field.regex)) {
             // console.log('RED')
             element.style.borderColor = 'red'
@@ -106,29 +104,46 @@ export class Form {
             element.style.borderColor = '#ced4da'
             field.valid = true
         }
+
         this.validateForm()
     }
 
     validateForm() {
         const validForm = this.fields.every((item) => item.valid)
+        let passwordRepeat = null
+
+        const password = this.fields.find(item => item.name === 'password').element.value
+        if (this.page === 'signup') {
+            passwordRepeat = this.fields.find(item => item.name === 'password-repeat').element.value
+        }
 
         const isValid = this.agreeElement ? this.agreeElement.checked && validForm : validForm
+
         if (isValid) {
             this.processButton.removeAttribute('disabled')
         } else {
             this.processButton.setAttribute('disabled', 'disabled')
         }
-        return isValid
+
+        if (password && passwordRepeat) {
+            if (password === passwordRepeat) {
+                return isValid
+            } else {
+                alert('Пароли не совпадают')
+            }
+        }
     }
 
     async processSignup() {
 
         const email = this.fields.find(item => item.name === 'email').element.value
         const password = this.fields.find(item => item.name === 'password').element.value
-        const fio = this.fields.find(item => item.name === 'name').element.value
-        const arrFio = fio.split(' ')
 
         if (this.page === 'signup') {
+
+            const fio = this.fields.find(item => item.name === 'name').element.value
+            const arrFio = fio.split(' ')
+
             try {
                 const result = await CustomHttp.request(`${config.host}/signup`, 'POST', {
                     name: arrFio[1],
@@ -151,7 +166,8 @@ export class Form {
                     }
                 }
             } catch (e) {
-                console.log("123", e)
+                alert("Ошибка signup")
+                return
             }
         }
         try {
@@ -175,7 +191,5 @@ export class Form {
         } catch (e) {
             console.log(e)
         }
-
-
     }
 }

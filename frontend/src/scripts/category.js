@@ -1,15 +1,16 @@
-import {CustomHttp} from "../services/custom-http.js";
+import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../config/config.js";
 
-export class Income {
+export class Category {
 
     constructor(page) {
         this.page = page
-        this.incomes = null
+        this.categories = null
         this.cardRemoveButton = null
         this.removeCardId = null
         this.editCardId = null
         this.urlParams = null
+
         if (this.page === "create-income") {
             this.urlParams = 'income'
         } else {
@@ -20,15 +21,14 @@ export class Income {
 
             this.createButton = document.getElementById('create-button')
             this.createInput = document.getElementById('create-input')
-            this.createCancel = document.getElementById('create-cancel')
 
             this.createButton.onclick = () => {
                 this.createInput.value
-                this.createIncome()
+                this.createCategory()
             }
 
-            this.createCancel.onclick = () => {
-                location.href = '#/income'
+            document.getElementById('create-cancel').onclick = () => {
+                location.href = `#/${this.urlParams}`
             }
 
         } else {
@@ -40,26 +40,25 @@ export class Income {
         try {
             const result = await CustomHttp.request(`${config.host}/categories/${this.page}`)
             if (result) {
-                this.incomes = result
+                this.categories = result
                 if (result.length === 0) {
                     // alert('Категория пуста!')
                     document.getElementById('empty-block').style.cssText = 'display:block!important'
                 }
-                this.showIncomeCategories()
+                this.showCategories()
             }
         } catch (e) {
             console.log(e)
         }
 
         if (this.page === 'income' || this.page === 'expense') {
-            document.getElementById('create-income').onclick = () => {
+            document.getElementById('create-category').onclick = () => {
                 location.href = `#/create-${this.page}`
             }
         }
-
     }
 
-    async createIncome() {
+    async createCategory() {
         try {
             const result = await CustomHttp.request(`${config.host}/categories/${this.urlParams}`, "POST", {
                 title: this.createInput.value
@@ -71,38 +70,37 @@ export class Income {
                     throw new Error(result.message)
                 }
                 location.href = `#/${this.urlParams}`
-
             }
         } catch (e) {
             console.log(e)
         }
     }
 
-    showIncomeCategories() {
+    showCategories() {
 
         const cardWrapper = document.getElementById('card-wrapper')
 
-        if (this.incomes) {
-            this.incomes.forEach(income => {
+        if (this.categories) {
+            this.categories.forEach(category => {
 
                 const card = document.createElement('div')
                 card.className = `p-3 border border-secondary rounded me-4 mb-3`
                 card.style.cssText = "width: 352px"
 
                 const cardTitle = document.createElement('div')
-                cardTitle.innerText = income.title
+                cardTitle.innerText = category.title
                 cardTitle.className = `fs-4 fw-bold pb-2`
 
                 const cardEditButton = document.createElement('button')
                 cardEditButton.innerText = "Редактировать"
                 cardEditButton.className = `btn btn-primary me-2`
-                cardEditButton.setAttribute('data-id', income.id)
+                cardEditButton.setAttribute('data-id', category.id)
                 cardEditButton.setAttribute('data-name', "edit")
 
                 this.cardRemoveButton = document.createElement('button')
                 this.cardRemoveButton.innerText = "Удалить"
                 this.cardRemoveButton.className = `btn btn-danger`
-                this.cardRemoveButton.setAttribute('data-id', income.id)
+                this.cardRemoveButton.setAttribute('data-id', category.id)
                 this.cardRemoveButton.setAttribute('data-bs-target', "#exampleModal")
                 this.cardRemoveButton.setAttribute('data-bs-toggle', "modal")
 
@@ -123,12 +121,11 @@ export class Income {
         removeButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 this.removeCardId = btn.getAttribute('data-id')
-                console.log("this.removeCardId", this.removeCardId)
             })
         })
 
         document.getElementById('confirm-delete').onclick = () => {
-            this.removeRequest()
+            this.removeCardRequest()
         }
 
         document.getElementById('cancel-delete').onclick = () => {
@@ -136,7 +133,7 @@ export class Income {
         }
     }
 
-    async removeRequest() {
+    async removeCardRequest() {
         try {
             const result = await CustomHttp.request(`${config.host}/categories/${this.page}/${this.removeCardId}`, 'DELETE')
             if (result) {
@@ -159,7 +156,5 @@ export class Income {
                 location.href = `#/edit-${this.page}?id=${this.editCardId}`
             })
         })
-
     }
-
 }

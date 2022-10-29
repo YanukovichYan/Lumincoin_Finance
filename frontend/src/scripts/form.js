@@ -94,7 +94,7 @@ export class Form {
     }
 
     validateField(field, element) {
-
+        console.log(element.value)
         if (!element.value || !element.value.match(field.regex)) {
             // console.log('RED')
             element.style.borderColor = 'red'

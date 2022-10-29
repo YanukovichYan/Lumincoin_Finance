@@ -46,15 +46,16 @@ export class Category {
                     document.getElementById('empty-block').style.cssText = 'display:block!important'
                 }
                 this.showCategories()
+                console.log("CATEGORY", result)
             }
         } catch (e) {
             console.log(e)
         }
 
-        if (this.page === 'income' || this.page === 'expense') {
+        // if (this.page === 'income' || this.page === 'expense') {
             document.getElementById('create-category').onclick = () => {
                 location.href = `#/create-${this.page}`
-            }
+            // }
         }
     }
 
@@ -149,9 +150,9 @@ export class Category {
 
     editCard() {
         let editButtons = document.querySelectorAll('button[data-name="edit"]')
-
         editButtons.forEach(btn => {
             btn.addEventListener('click', () => {
+                console.log("this.editCardId", btn)
                 this.editCardId = btn.getAttribute('data-id')
                 location.href = `#/edit-${this.page}?id=${this.editCardId}`
             })

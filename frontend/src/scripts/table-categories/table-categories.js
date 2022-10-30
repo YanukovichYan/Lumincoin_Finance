@@ -5,9 +5,13 @@ export class TableCategories {
 
     constructor() {
 
-        this.filter = "all"
+        this.filterValue = `interval&dateFrom=${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}&dateTo=${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}`
         this.operations = null
         this.removeOptionId = null
+        this.btnEditId = null
+        this.dateInterval = ''
+
+        this.btnFilterClick = null
 
         this.init()
     }
@@ -23,49 +27,111 @@ export class TableCategories {
         }
 
         this.getDataTable()
+
+        this.showFilterBtn()
+
+
     }
 
     async getDataTable() {
 
+        const dateFrom = document.getElementById('date-from')
+        const dateTo = document.getElementById('date-to')
+        const dateInterval = document.getElementById('date-interval')
+
+        dateInterval.onchange = () => {
+
+            this.dateInterval = `&dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
+
+            console.log('dateInterval', this.dateInterval)
+        }
+
         try {
-
-            const result = await CustomHttp.request(`${config.host}/operations?period=${this.filter}`)
-
+            const result = await CustomHttp.request(`${config.host}/operations?period=${this.filterValue}${this.dateInterval}`)
             if (result) {
                 this.operations = result
-
-                // console.log("Все операции для таблички", result)
-                this.showFilterBtn()
                 this.showTable()
-
+                // console.log("Все операции для таблички", result)
             }
-
         } catch (e) {
             console.log(e)
         }
-
     }
-
 
     showFilterBtn() {
-        config.dataBtn.forEach(btn => {
-            const filterBtn = document.createElement('button')
-            filterBtn.innerText = btn
-            filterBtn.className = 'btn btn-light border border-secondary me-3 px-3'
 
-            document.getElementById('btn-wrapper').appendChild(filterBtn)
-
-        })
-    }
-
-    showTable() {
         config.theadTitle.forEach(ttl => {
             const title = document.createElement('th')
             title.innerText = ttl
             title.className = 'text-center'
             document.getElementById('thead').appendChild(title)
         })
-        console.log('this.operations', this.operations)
+
+        config.dataBtn.forEach(btn => {
+            const filterBtn = document.createElement('button')
+            filterBtn.innerText = btn
+            filterBtn.setAttribute('data-name', 'filter')
+            filterBtn.className = 'btn btn-light border border-secondary me-3 px-3'
+
+            filterBtn.addEventListener('click', () => {
+                this.btnFilterClick = filterBtn
+
+                let allFilterBtn = document.querySelectorAll('button[data-name="filter"]')
+                allFilterBtn.forEach(el => {
+                    el.className = 'btn btn-light border border-secondary me-3 px-3'
+                })
+
+                this.btnFilterClick.className = 'btn btn-secondary border border-secondary me-3 px-3'
+
+                document.getElementById('tbody').innerHTML = ' '
+
+                this.showOperationsWithFilter()
+
+            })
+
+
+            document.getElementById('btn-wrapper').appendChild(filterBtn)
+
+        })
+    }
+
+    showOperationsWithFilter() {
+
+        console.log('this.btnFilterClick', this.btnFilterClick.innerText)
+
+        const dateToday = `${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}`
+
+        switch (this.btnFilterClick.innerText) {
+            case 'Сегодня':
+                this.filterValue = `interval&dateFrom=${dateToday}&dateTo=${dateToday}`
+                break
+            case 'Неделя':
+                this.filterValue = 'week'
+                break
+            case 'Месяц':
+                this.filterValue = 'month'
+                break
+            case 'Год':
+                this.filterValue = 'year'
+                break
+            case 'Все':
+                this.filterValue = 'all'
+                break
+            case 'Интервал':
+                this.filterValue = 'interval'
+                break
+            // default:
+            // здесь нужно сделать today
+            // break
+        }
+        this.getDataTable()
+
+        console.log("this.filterValue", this.filterValue)
+    }
+
+    showTable() {
+
+        // console.log('this.operations', this.operations)
         if (this.operations) {
 
             const tbody = document.getElementById('tbody')
@@ -115,6 +181,7 @@ export class TableCategories {
                 edit.className = `text-center`
                 edit.setAttribute('role', 'button')
                 edit.setAttribute('data-name', 'edit')
+                edit.setAttribute('data-id', operation.id)
 
                 const editImg = document.createElement('img')
                 editImg.setAttribute('src', './src/static/images/pen-icon.png')
@@ -173,14 +240,16 @@ export class TableCategories {
     }
 
     edit() {
-
-
         const editButtons = document.querySelectorAll('td[data-name="edit"]')
-        console.log(editButtons)
 
-        // document.getElementById('pen').onclick = () => {
-        //     location.href = '#/edit_income-or-expense'
-        // }
+        editButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.btnEditId = btn.getAttribute('data-id')
+                // console.log('EDIT', this.btnEditId)
+                location.href = `#/edit_income-or-expense?id=${this.btnEditId}`
+            })
+        })
+
 
     }
 

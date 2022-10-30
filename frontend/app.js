@@ -25,7 +25,9 @@ class App {
 
             try {
                 const result = await CustomHttp.request(`${config.host}/balance`)
-                document.getElementById('balance').innerText = `${result.balance}$`
+                if (result.balance) {
+                    document.getElementById('balance').innerText = `${result.balance}$`
+                }
             } catch (e) {
                 console.log(e)
             }

@@ -46,7 +46,7 @@ export class Category {
                     document.getElementById('empty-block').style.cssText = 'display:block!important'
                 }
                 this.showCategories()
-                console.log("CATEGORY", result)
+                // console.log("CATEGORY", result)
             }
         } catch (e) {
             console.log(e)

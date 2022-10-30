@@ -8,10 +8,24 @@ export class Create_incomeOrExpenses {
         this.page = page
         this.categories = null
         this.createFormValue = null
+        this.optionById = null
+        this.optionId = null
 
         this.urlParams = window.location.href.split('=')[1]
 
-        this.selectType = this.urlParams
+        this.urlSelectType = null
+
+        if (this.page === 'create') {
+            this.urlSelectType = this.urlParams
+        }
+
+        this.getType = null
+
+        this.selectType = document.getElementById('select-type')
+        this.selectCategory = document.getElementById('select-category')
+        this.amount = document.getElementById('amount')
+        this.date = document.getElementById('date')
+        this.comment = document.getElementById('comment')
 
         this.init()
     }
@@ -19,7 +33,21 @@ export class Create_incomeOrExpenses {
     init() {
 
         if (this.page === 'edit') {
-            document.getElementById('save').innerText = 'Сохранить'
+            const saveBtn = document.getElementById('save')
+
+            saveBtn.innerText = 'Сохранить'
+
+            saveBtn.onclick = () => {
+                this.edit()
+            }
+
+
+            document.getElementById('cancel').onclick = () => {
+                location.href = '#/table-categories'
+            }
+
+            this.getOptionsById()
+
         }
 
         this.fillingForm()
@@ -30,33 +58,35 @@ export class Create_incomeOrExpenses {
 
         this.getCategories()
 
-        const selectType = document.getElementById('select-type')
+        // const selectType = document.getElementById('select-type')
 
-        this.urlParams === 'income' ? selectType.selectedIndex = 1 : selectType.selectedIndex = 2
+        this.urlParams === 'income' ? this.selectType.selectedIndex = 1 : this.selectType.selectedIndex = 2
 
-        document.getElementById('select-type').onchange = () => {
-            document.getElementById('select-category').innerHTML = ' '
-            this.selectType = selectType.value
+        this.selectType.onchange = () => {
+            this.selectCategory.innerHTML = ' '
+            this.urlSelectType = this.selectType.value
             this.getCategories()
         }
 
         document.getElementById('form').onchange = () => {
 
-            this.selectType = selectType.value
+            this.urlSelectType = this.selectType.value
 
             this.createFormValue = {
-                type: selectType.value,
-                amount: document.getElementById('amount').value,
-                date: document.getElementById('date').value,
-                comment: document.getElementById('comment').value,
-                category_id: +(document.getElementById('select-category').value),
+                type: this.selectType.value,
+                amount: this.amount.value,
+                date: this.date.value,
+                comment: this.comment.value,
+                category_id: +(this.selectCategory.value),
             }
 
-            console.log(this.createFormValue)
+            // console.log(this.createFormValue)
         }
 
-        document.getElementById('save').onclick = () => {
-            this.create()
+        if (this.page === 'create') {
+            document.getElementById('save').onclick = () => {
+                this.create()
+            }
         }
 
         document.getElementById('cancel').onclick = () => {
@@ -66,22 +96,24 @@ export class Create_incomeOrExpenses {
     }
 
     async getCategories() {
+        if (this.urlSelectType) {
+            try {
+                const result = await CustomHttp.request(`${config.host}/categories/${this.urlSelectType}`)
 
-        try {
-            const result = await CustomHttp.request(`${config.host}/categories/${this.selectType}`)
-
-            if (result) {
-                this.categories = result
-                // console.log("this.categories", this.categories)
-                if (result.length === 0) {
-                    alert('Категорий нет!')
+                if (result) {
+                    this.categories = result
+                    // console.log("this.categories", this.categories)
+                    if (result.length === 0) {
+                        alert('Категорий нет!')
+                    }
+                    // console.log("CATEGORY", result)
                 }
-                // console.log("CATEGORY", result)
+            } catch (e) {
+                console.log(e)
             }
-        } catch (e) {
-            console.log(e)
         }
 
+        // if (this.page === 'create')
         this.showCategoryOptions()
 
     }
@@ -108,12 +140,13 @@ export class Create_incomeOrExpenses {
                 document.getElementById('select-category').appendChild(optionCategory)
             })
 
+            if (this.page === 'edit') this.showSelectCategory()
+
         }
 
     }
 
     async create() {
-
         try {
             const result = await CustomHttp.request(`${config.host}/operations`, 'POST', this.createFormValue)
 
@@ -121,8 +154,81 @@ export class Create_incomeOrExpenses {
                 if (result.error) {
                     alert(result.message)
                 }
+                location.href = '#/table-categories'
+                console.log("CREATE-result", result)
+
             }
-            console.log("CREATE-result", result)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async getOptionsById() {
+        this.optionId = location.hash.split('=')[1]
+        try {
+            const result = await CustomHttp.request(`${config.host}/operations/${this.optionId}`)
+
+            if (result) {
+                if (result.error) {
+                    alert(result.message)
+                }
+                this.optionById = result
+                this.editFormValue()
+                // console.log("EDIT-result", result)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    editFormValue() {
+        console.log('this.optionById', this.optionById)
+
+        this.optionById.type === 'income' ? this.selectType.selectedIndex = 1 : this.selectType.selectedIndex = 2
+
+        this.optionById.type === 'income' ? this.getType = 'income' : this.getType = 'expense'
+
+        this.urlSelectType = this.getType
+
+        this.getCategories()
+
+        this.amount.value = this.optionById.amount
+        this.date.value = this.optionById.date
+        this.comment.value = this.optionById.comment
+
+
+    }
+
+    showSelectCategory() {
+
+        if (this.categories) {
+
+            console.log('this.categories', this.categories)
+
+            const selectedCategoryIndex = this.categories.findIndex(category => category.title === this.optionById.category)
+
+            this.selectCategory.selectedIndex = selectedCategoryIndex + 2
+            console.log('selectedCategory', selectedCategoryIndex)
+
+        }
+
+    }
+
+    async edit() {
+
+        console.log(this.createFormValue)
+
+        try {
+            const result = await CustomHttp.request(`${config.host}/operations/${this.optionId}`, 'PUT', this.createFormValue)
+
+            if (result) {
+                if (result.error) {
+                    alert(result.message)
+                }
+                location.href = '#/table-categories'
+                console.log("EDIT-result", result)
+
+            }
         } catch (e) {
             console.log(e)
         }

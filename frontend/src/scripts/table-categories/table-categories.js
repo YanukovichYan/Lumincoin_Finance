@@ -4,20 +4,16 @@ import config from "../../../config/config.js";
 export class TableCategories {
 
     constructor() {
-
         this.filterValue = `interval&dateFrom=${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}&dateTo=${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}`
         this.operations = null
         this.removeOptionId = null
         this.btnEditId = null
         this.dateInterval = ''
-
         this.btnFilterClick = null
-
         this.init()
     }
 
     init() {
-
         document.getElementById('create-income').onclick = () => {
             location.href = `#/table-categories/create_income-or-expenses?operations=income`
         }
@@ -28,26 +24,19 @@ export class TableCategories {
 
         const dateFrom = document.getElementById('date-from')
         const dateTo = document.getElementById('date-to')
-
         const dateInterval = document.getElementById('date-interval')
 
         dateInterval.onchange = () => {
-
             const dateInterval = `&dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
-
             if (dateFrom.value && dateTo.value) {
                 this.dateInterval = dateInterval
                 this.getDataTable()
                 console.log(this.dateInterval)
                 console.log('Получили данные, отправляем запрос')
             }
-
         }
-
         this.getDataTable()
-
         this.showFilterBtn()
-
     }
 
     async getDataTable() {
@@ -58,8 +47,8 @@ export class TableCategories {
             const result = await CustomHttp.request(`${config.host}/operations?period=${this.filterValue}${this.dateInterval}`)
             if (result) {
                 this.operations = result
+                document.getElementById('tbody').innerHTML = ' '
                 this.showTable()
-                // console.log("Все операции для таблички", result)
             }
         } catch (e) {
             console.log(e)
@@ -95,22 +84,15 @@ export class TableCategories {
                     el.className = 'btn btn-light border border-secondary me-3 px-3'
                 })
 
-                // this.btnFilterClick.classList.add() = 'btn btn-secondary border border-secondary me-3 px-3'
                 this.btnFilterClick.classList.add('btn-secondary')
                 this.btnFilterClick.classList.remove('btn-light')
 
                 document.getElementById('tbody').innerHTML = ' '
 
                 this.showOperationsWithFilter()
-
             })
-
-
             document.getElementById('btn-wrapper').appendChild(filterBtn)
-
         })
-
-
     }
 
     showOperationsWithFilter() {
@@ -159,6 +141,7 @@ export class TableCategories {
 
                 const number = document.createElement('td')
                 number.className = `text-center fw-bold`
+                number.innerText = `${index + 1} `
                 number.innerText = `${index + 1} `
 
                 const type = document.createElement('td')
@@ -228,8 +211,6 @@ export class TableCategories {
         removeOptions.forEach(option => {
             option.addEventListener('click', () => {
                 this.removeOptionId = option.getAttribute('data-id')
-                console.log(this.removeOptionId)
-
             })
         })
 
@@ -263,8 +244,7 @@ export class TableCategories {
         editButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 this.btnEditId = btn.getAttribute('data-id')
-                // console.log('EDIT', this.btnEditId)
-                location.href = `#/edit_income-or-expense?id=${this.btnEditId}`
+                location.href = `#/table-categories/edit_income-or-expense?id=${this.btnEditId}`
             })
         })
 

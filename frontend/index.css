@@ -40,3 +40,7 @@
 .active svg {
     fill: white;
 }
+
+input::placeholder {
+    /*color: #ced4da;*/
+}

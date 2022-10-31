@@ -1,21 +1,21 @@
 <div>
 
     <div id="form">
-        <select id="select-type" style="width: 397px" class="form-select mb-3 text-secondary"
+        <select id="select-type" style="width: 397px" class="form-select mb-3"
                 aria-label="Default select example">
             <option disabled hidden>Тип...</option>
             <option value="income">Доход</option>
             <option value="expense">Расход</option>
         </select>
 
-        <select id="select-category" style="width: 397px" class="form-select mb-3 text-secondary"
+        <select id="select-category" style="width: 397px" class="form-select mb-3"
                 aria-label="Default select example">
             <option selected disabled hidden>Категория...</option>
         </select>
 
         <input id="amount" style="width: 397px" type="number" class="form-control mb-3" placeholder="Сумма в $...">
 
-        <input id="date" style="width: 397px" type="date" class="form-control mb-3 text-secondary">
+        <input id="date"  style="width: 397px" type="text" onfocus="(this.type='date')" class="form-control mb-3" placeholder="Дата...">
 
         <input id="comment" style="width: 397px" type="text" class="form-control mb-4" placeholder="Комментарий...">
     </div>

@@ -130,7 +130,23 @@ export class Category {
         }
 
         document.getElementById('cancel-delete').onclick = () => {
-            location.reload()
+            document.getElementById('exampleModal').style.display = 'none'
+            if (document.getElementById('exampleModal').classList.contains('show')) {
+                document.getElementById('exampleModal').classList.remove('show')
+                console.log('1')
+            }
+            // location.reload()
+
+            if (document.getElementById('exampleModal').getAttribute('aria-modal')) {
+                document.getElementById('exampleModal').removeAttribute('aria-modal')
+                console.log('2')
+            }
+
+            if (document.getElementById('exampleModal').getAttribute('role')) {
+                document.getElementById('exampleModal').removeAttribute('role')
+                console.log('3')
+            }
+
         }
     }
 

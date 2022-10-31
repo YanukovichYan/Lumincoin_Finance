@@ -54,7 +54,7 @@ export class Category {
 
         // if (this.page === 'income' || this.page === 'expense') {
             document.getElementById('create-category').onclick = () => {
-                location.href = `#/create-${this.page}`
+                location.href = `#/${this.page}/create-${this.page}`
             // }
         }
     }

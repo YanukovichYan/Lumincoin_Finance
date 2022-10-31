@@ -48,7 +48,7 @@ export class Router {
                 }
             },
             {
-                route: '#/create-income',
+                route: '#/income/create-income',
                 title: 'Создание категории доходов',
                 template: 'src/templates/incomes-and-expenses/create-category.html',
                 load: () => {
@@ -56,7 +56,7 @@ export class Router {
                 }
             },
             {
-                route: '#/edit-income',
+                route: '#/income/edit-income',
                 title: 'Редактирование категории доходов',
                 template: 'src/templates/incomes-and-expenses/edit-category.html',
                 load: () => {
@@ -72,7 +72,7 @@ export class Router {
                 }
             },
             {
-                route: '#/create-expense',
+                route: '#/expense/create-expense',
                 title: 'Создание категории расходов',
                 template: 'src/templates/incomes-and-expenses/create-category.html',
                 load: () => {
@@ -80,7 +80,7 @@ export class Router {
                 }
             },
             {
-                route: '#/edit-expense',
+                route: '#/expense/edit-expense',
                 title: 'Редактирование категории расходов',
                 template: 'src/templates/incomes-and-expenses/edit-category.html',
                 load: () => {
@@ -96,7 +96,7 @@ export class Router {
                 }
             },
             {
-                route: '#/create_income-or-expenses',
+                route: '#/table-categories/create_income-or-expenses',
                 title: 'Создание дохода/расхода',
                 template: 'src/templates/table-categories/form.html',
                 load: () => {
@@ -104,7 +104,7 @@ export class Router {
                 }
             },
             {
-                route: '#/edit_income-or-expense',
+                route: '#/table-categories/edit_income-or-expense',
                 title: 'Редактирование дохода/расхода',
                 template: 'src/templates/table-categories/form.html',
                 load: () => {

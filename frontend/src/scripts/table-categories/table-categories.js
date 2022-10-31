@@ -19,11 +19,11 @@ export class TableCategories {
     init() {
 
         document.getElementById('create-income').onclick = () => {
-            location.href = `#/create_income-or-expenses?operations=income`
+            location.href = `#/table-categories/create_income-or-expenses?operations=income`
         }
 
         document.getElementById('create-expense').onclick = () => {
-            location.href = `#/create_income-or-expenses?operations=expense`
+            location.href = `#/table-categories/create_income-or-expenses?operations=expense`
         }
 
         const dateFrom = document.getElementById('date-from')

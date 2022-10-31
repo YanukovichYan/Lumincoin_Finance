@@ -36,17 +36,17 @@ class Index {
 
     activeSidebarItem() {
         let navLinks = document.querySelectorAll('[data-name="nav"]')
-        const currentUrl = location.hash
+        const currentUrl = location.hash.split('/')[1]
         const dropdownButton = document.getElementById('dropdown-button')
 
         navLinks.forEach(link => {
-            if (currentUrl === link.querySelector('a').getAttribute('href')) {
+            if (currentUrl === link.querySelector('a').getAttribute('href').split('/')[1]) {
                 link.classList.add('active')
             } else {
                 link.classList.remove('active')
             }
 
-            if (currentUrl === '#/income' || currentUrl === '#/expense') {
+            if (currentUrl === 'income' || currentUrl === 'expense') {
                 document.getElementById('dashboard-collapse').classList.add('show')
                 dropdownButton.className = 'btn btn-primary w-100 rounded-top justify-content-between btn-toggle d-inline-flex align-items-center border-0'
             } else {

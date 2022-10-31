@@ -12,9 +12,7 @@ export class Form {
         this.urlParams = window.location.href.split('=')[1]
         this.urlSelectType = null
 
-        if (this.page === 'create') {
-            this.urlSelectType = this.urlParams
-        }
+        if (this.page === 'create') this.urlSelectType = this.urlParams
 
         this.getType = null
         this.selectType = document.getElementById('select-type')
@@ -30,12 +28,10 @@ export class Form {
         if (this.page === 'edit') {
             const saveBtn = document.getElementById('save')
             saveBtn.innerText = 'Сохранить'
-            saveBtn.onclick = () => {
-                this.edit()
-            }
-            document.getElementById('cancel').onclick = () => {
-                location.href = '#/table-categories'
-            }
+            saveBtn.onclick = () => this.edit()
+
+            document.getElementById('cancel').onclick = () => location.href = '#/table-categories'
+
             this.getOptionsById()
         }
         this.fillingForm()
@@ -66,15 +62,9 @@ export class Form {
             }
         }
 
-        if (this.page === 'create') {
-            document.getElementById('save').onclick = () => {
-                this.create()
-            }
-        }
+        if (this.page === 'create') document.getElementById('save').onclick = () => this.create()
 
-        document.getElementById('cancel').onclick = () => {
-            location.href = '#/table-categories'
-        }
+        document.getElementById('cancel').onclick = () => location.href = '#/table-categories'
     }
 
     async getCategories() {
@@ -84,7 +74,7 @@ export class Form {
                 if (result) {
                     this.categories = result
                     if (result.length === 0) {
-                        alert('Категорий нет!')
+                        console.log('Категорий нет!')
                     }
                 }
             } catch (e) {

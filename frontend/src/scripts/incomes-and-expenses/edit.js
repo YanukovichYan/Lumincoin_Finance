@@ -4,11 +4,9 @@ import config from "../../../config/config.js";
 export class Edit {
 
     constructor(page) {
-
         this.page = page
         this.editCardId = window.location.hash.split('=')[1]
         this.editInput = document.getElementById('edit-input')
-
         this.newValueOnInput = null
 
         this.init()
@@ -24,19 +22,11 @@ export class Edit {
             console.log(e)
         }
 
+        this.editInput.onchange = (e) => this.newValueOnInput = e.target.value
 
-        this.editInput.onchange = (e) => {
-            this.newValueOnInput = e.target.value
-        }
+        document.getElementById('save-edit-btn').onclick = () => this.saveEdit()
 
-
-        document.getElementById('save-edit-btn').onclick = () => {
-            this.saveEdit()
-        }
-
-        document.getElementById('cancel-btn').onclick = () => {
-            location.href = `#/${this.page}`
-        }
+        document.getElementById('cancel-btn').onclick = () => location.href = `#/${this.page}`
     }
 
     async saveEdit() {
@@ -49,6 +39,4 @@ export class Edit {
             console.log(e)
         }
     }
-
-
 }

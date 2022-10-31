@@ -57,12 +57,12 @@ export class Main {
             if (result) {
                 this.categories = result
                 if (result.length === 0) {
-                    alert('Категорий нет!')
+                    console.log('Категорий нет!')
                 }
                 result.forEach(el => {
                     this.categoriesIncome.push(el.title)
                 })
-                console.log(this.categoriesIncome)
+                // console.log(this.categoriesIncome)
 
                 // this.categoriesIncome = result
                 // console.log('income', result)
@@ -78,7 +78,7 @@ export class Main {
             if (result) {
                 this.categories = result
                 if (result.length === 0) {
-                    alert('Категорий нет!')
+                    console.log('Категорий нет!')
                 }
 
                 result.forEach(el => {
@@ -200,8 +200,6 @@ export class Main {
             this.incomeDataAmount.push(amount)
         })
 
-
-
         Object.entries(newObjectExpense).forEach(category => {
             let amount = 0
             category[1].forEach(operation => {
@@ -209,6 +207,7 @@ export class Main {
             })
             this.expenseDataAmount.push(amount)
         })
+        console.log('incomeDataAmount', this.incomeDataAmount)
         console.log('expenseDataAmount', this.expenseDataAmount)
 
         if (this.incomeDataAmount.length) {
@@ -217,6 +216,14 @@ export class Main {
 
         if (this.expenseDataAmount.length){
             this.expenseChartShow()
+        }
+
+        if ( this.incomeDataAmount.length === 0 && this.expenseDataAmount.length ===0) {
+            document.getElementById('main').style.display = 'none'
+            document.getElementById('empty-block').style.display = 'block'
+        } else {
+            document.getElementById('main').style.display = 'block'
+            document.getElementById('empty-block').style.display = 'none'
         }
 
         // console.log(incomeOperation)

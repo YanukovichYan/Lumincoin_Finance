@@ -8,6 +8,7 @@ export class FormAuth {
         this.page = page
         this.agreeElement = document.getElementById('agree')
         this.processButton = document.getElementById('process')
+        this.remember = document.getElementById('process')
 
         if (localStorage.getItem(Auth.accessTokenKey)) {
             location.href = '#/main'
@@ -91,7 +92,6 @@ export class FormAuth {
     }
 
     validateField(field, element) {
-        console.log(element.value)
         if (!element.value || !element.value.match(field.regex)) {
             element.style.borderColor = 'red'
             field.valid = false
@@ -135,10 +135,8 @@ export class FormAuth {
         const password = this.fields.find(item => item.name === 'password').element.value
 
         if (this.page === 'signup') {
-
             const fio = this.fields.find(item => item.name === 'name').element.value
             const arrFio = fio.split(' ')
-
             try {
                 const result = await CustomHttp.request(`${config.host}/signup`, 'POST', {
                     name: arrFio[1],
@@ -150,18 +148,18 @@ export class FormAuth {
 
                 if (result) {
                     if (result.error) {
-                        alert(result.message)
+                        console.log(result.message)
                         if (result.validation[0].message) {
-                            alert(result.validation[0].message)
+                            console.log(result.validation[0].message)
                         }
                         throw new Error(result.message)
                     } else if (result.user) {
-                        alert('Registration completed successfully')
+                        console.log('Registration completed successfully')
                         window.location.href = "#/main"
                     }
                 }
             } catch (e) {
-                alert("Ошибка signup")
+                console.log("Ошибка signup")
                 return
             }
         }
@@ -169,17 +167,17 @@ export class FormAuth {
             const result = await CustomHttp.request(`${config.host}/login`, 'POST', {
                 email: email,
                 password: password,
-                rememberMe: false
+                rememberMe: this.remember.checked
             })
 
             if (result) {
                 if (result.error) {
-                    alert(result.message)
+                    console.log(result.message)
                     throw new Error(result.message)
                 }
                 Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken)
                 Auth.setUserInfo(result.user)
-                alert("Вы успешно вошли в аккаунт!")
+                console.log("Вы успешно вошли в аккаунт!")
                 location.href = '#/main'
             }
 

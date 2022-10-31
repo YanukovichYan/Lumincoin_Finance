@@ -27,7 +27,7 @@ export class CustomHttp {
             // console.log("response", response)
             if (response) {
                 if (response.statusText) {
-                    alert(response.statusText)
+                    console.log(response.statusText)
                 }
             }
             if (response.status === 401) {
@@ -41,7 +41,7 @@ export class CustomHttp {
                 }
             }
             if (response.message) {
-                alert(response.message)
+                console.log(response.message)
             }
             // throw new Error(response.message)
         }

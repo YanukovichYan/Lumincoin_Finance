@@ -121,7 +121,7 @@ export class Router {
         let accessTokenKey = localStorage.getItem(Auth.accessTokenKey)
 
         if (accessTokenKey === null && urlRoute !== '#/login' && urlRoute !== '#/signup') {
-            alert('Нет токенов, необходимо войти или зарегистрироваться')
+            console.log('Нет токенов, необходимо войти или зарегистрироваться')
             window.location.href = '#/login'
             return
         }

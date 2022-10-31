@@ -50,7 +50,6 @@ export class Auth {
         const refreshToken = localStorage.getItem(this.refreshTokenKey)
 
         if (refreshToken) {
-
             const response = await fetch(`${config.host}/refresh`, {
                 method: 'POST',
                 headers: {
@@ -71,7 +70,7 @@ export class Auth {
                     this.setTokens(result.tokens.accessToken, result.tokens.refreshToken)
                     return true
                 } else {
-                    alert("RefreshToken = null || expired. --- Пройдите регистрацию")
+                    console.log("RefreshToken = null || expired. --- Пройдите регистрацию")
                 }
             }
         }
@@ -79,8 +78,8 @@ export class Auth {
 
         // для чего эти 3 строчки?
 
-        // this.removeTokens()
+        this.removeTokens()
         // location.href = '#/login'
-        // return false
+        return false
     }
 }

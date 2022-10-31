@@ -22,16 +22,16 @@ class Index {
         //     location.href = '#/login'
         // }
 
-        if (localStorage.getItem(Auth.accessTokenKey)) {
-            try {
-                const result = await CustomHttp.request(`${config.host}/balance`)
-                if (result.balance) {
-                    document.getElementById('balance').innerText = `${result.balance}$`
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
+        // if (localStorage.getItem(Auth.accessTokenKey)) {
+        //     try {
+        //         const result = await CustomHttp.request(`${config.host}/balance`)
+        //         if (result.balance) {
+        //             document.getElementById('balance').innerText = `${result.balance}$`
+        //         }
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // }
     }
 
     activeSidebarItem() {

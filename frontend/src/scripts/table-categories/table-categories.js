@@ -4,7 +4,8 @@ import config from "../../../config/config.js";
 export class TableCategories {
 
     constructor() {
-        this.filterValue = `interval&dateFrom=${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}&dateTo=${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}`
+        this.dateToday = `${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}`
+        this.filterValue = `interval&dateFrom=${this.dateToday}&dateTo=${this.dateToday}`
         this.operations = null
         this.removeOptionId = null
         this.btnEditId = null
@@ -14,13 +15,9 @@ export class TableCategories {
     }
 
     init() {
-        document.getElementById('create-income').onclick = () => {
-            location.href = `#/table-categories/create_income-or-expenses?operations=income`
-        }
+        document.getElementById('create-income').onclick = () => location.href = `#/table-categories/create_income-or-expenses?operations=income`
 
-        document.getElementById('create-expense').onclick = () => {
-            location.href = `#/table-categories/create_income-or-expenses?operations=expense`
-        }
+        document.getElementById('create-expense').onclick = () => location.href = `#/table-categories/create_income-or-expenses?operations=expense`
 
         const dateFrom = document.getElementById('date-from')
         const dateTo = document.getElementById('date-to')
@@ -36,7 +33,7 @@ export class TableCategories {
             }
         }
         this.getDataTable()
-        this.showFilterBtn()
+        this.showFilterBtnAndThead()
     }
 
     async getDataTable() {
@@ -55,8 +52,7 @@ export class TableCategories {
         }
     }
 
-    showFilterBtn() {
-
+    showFilterBtnAndThead() {
         config.theadTitle.forEach(ttl => {
             const title = document.createElement('th')
             title.innerText = ttl
@@ -65,14 +61,16 @@ export class TableCategories {
         })
 
         let active = true;
-
         config.dataBtn.forEach((btn, index) => {
             const filterBtn = document.createElement('button')
             filterBtn.innerText = btn
             filterBtn.setAttribute('data-name', 'filter')
             filterBtn.className = 'btn btn-light border border-secondary me-3 px-3'
 
-            if (active && index === 0) filterBtn.className = 'btn btn-secondary border border-secondary me-3 px-3'
+            if (active && index === 0) {
+                filterBtn.classList.remove('btn-light')
+                filterBtn.classList.add('btn-secondary')
+            }
 
             filterBtn.addEventListener('click', () => {
                 active = false
@@ -81,7 +79,8 @@ export class TableCategories {
 
                 let allFilterBtn = document.querySelectorAll('button[data-name="filter"]')
                 allFilterBtn.forEach(el => {
-                    el.className = 'btn btn-light border border-secondary me-3 px-3'
+                    el.classList.add('btn-light')
+                    el.classList.remove('btn-secondary')
                 })
 
                 this.btnFilterClick.classList.add('btn-secondary')
@@ -96,12 +95,9 @@ export class TableCategories {
     }
 
     showOperationsWithFilter() {
-
-        const dateToday = `${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}`
-
         switch (this.btnFilterClick.innerText) {
             case 'Сегодня':
-                this.filterValue = `interval&dateFrom=${dateToday}&dateTo=${dateToday}`
+                this.filterValue = `interval&dateFrom=${this.dateToday}&dateTo=${this.dateToday}`
                 break
             case 'Неделя':
                 this.filterValue = 'week'
@@ -122,16 +118,15 @@ export class TableCategories {
         this.getDataTable()
     }
 
-    createBlock(tag, className) {
-        const block = document.createElement(tag)
-        if (className) {
-            block.classList.add(className)
-        }
-        return block
-    }
+    // createBlock(tag, className) {
+    //     const block = document.createElement(tag)
+    //     if (className) {
+    //         block.classList.add(className)
+    //     }
+    //     return block
+    // }
 
     showTable() {
-
         if (this.operations) {
 
             const tbody = document.getElementById('tbody')
@@ -148,7 +143,9 @@ export class TableCategories {
                 type.className = operation.type === 'income' ? 'text-center text-success' : 'text-center text-danger'
                 type.innerText = operation.type === 'income' ? 'доход' : 'расход'
 
-                const category = this.createBlock('td', `text-center`)
+                const category = document.createElement('td')
+                category.className = 'text-center'
+                // this.createBlock('td', `text-center`)
                 category.innerText = operation.category || null
 
                 const amount = document.createElement('td')
@@ -188,7 +185,6 @@ export class TableCategories {
                 editImg.setAttribute('alt', 'pen')
                 edit.appendChild(editImg)
 
-
                 tr.appendChild(number)
                 tr.appendChild(type)
                 tr.appendChild(category)
@@ -214,22 +210,16 @@ export class TableCategories {
             })
         })
 
-        document.getElementById('confirm-delete').onclick = () => {
-            this.removeOptionRequest()
-        }
-
-        document.getElementById('cancel-delete').onclick = () => {
-            location.reload()
-        }
+        document.getElementById('confirm-delete').onclick = () => this.removeOptionRequest()
+        document.getElementById('cancel-delete').onclick = () => location.reload()
     }
 
     async removeOptionRequest() {
         try {
             const result = await CustomHttp.request(`${config.host}/operations/${this.removeOptionId}`, 'DELETE')
-
             if (result) {
                 if (!result.error) {
-                    alert(result.message)
+                    console.log(result.message)
                     location.reload()
                 }
             }
@@ -247,8 +237,5 @@ export class TableCategories {
                 location.href = `#/table-categories/edit_income-or-expense?id=${this.btnEditId}`
             })
         })
-
-
     }
-
 }

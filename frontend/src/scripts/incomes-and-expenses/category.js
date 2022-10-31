@@ -11,29 +11,9 @@ export class Category {
         this.editCardId = null
         this.urlParams = null
 
-        if (this.page === "create-income") {
-            this.urlParams = 'income'
-        } else {
-            this.urlParams = 'expense'
-        }
+        this.page === "create-income" ? this.urlParams = 'income' : this.urlParams = 'expense'
 
-        if (this.page === 'create-income' || this.page === 'create-expense') {
-
-            this.createButton = document.getElementById('create-button')
-            this.createInput = document.getElementById('create-input')
-
-            this.createButton.onclick = () => {
-                this.createInput.value
-                this.createCategory()
-            }
-
-            document.getElementById('create-cancel').onclick = () => {
-                location.href = `#/${this.urlParams}`
-            }
-
-        } else {
-            this.init()
-        }
+        this.page === 'create-income' || this.page === 'create-expense' ? this.create() : this.init()
     }
 
     async init() {
@@ -42,7 +22,7 @@ export class Category {
             if (result) {
                 this.categories = result
                 if (result.length === 0) {
-                    // alert('Категория пуста!')
+                    console.log('Категория пуста!')
                     document.getElementById('empty-block').style.cssText = 'display:block!important'
                 }
                 this.showCategories()
@@ -51,15 +31,21 @@ export class Category {
         } catch (e) {
             console.log(e)
         }
-
-        // if (this.page === 'income' || this.page === 'expense') {
-            document.getElementById('create-category').onclick = () => {
-                location.href = `#/${this.page}/create-${this.page}`
-            // }
-        }
+        document.getElementById('create-category').onclick = () => location.href = `#/${this.page}/create-${this.page}`
     }
 
-    async createCategory() {
+    create() {
+        this.createButton = document.getElementById('create-button')
+        this.createInput = document.getElementById('create-input')
+
+        this.createButton.onclick = () => {
+            this.createInput.value
+            this.createCategoryRequest()
+        }
+        document.getElementById('create-cancel').onclick = () => location.href = `#/${this.urlParams}`
+    }
+
+    async createCategoryRequest() {
         try {
             const result = await CustomHttp.request(`${config.host}/categories/${this.urlParams}`, "POST", {
                 title: this.createInput.value
@@ -105,7 +91,6 @@ export class Category {
                 this.cardRemoveButton.setAttribute('data-bs-target', "#exampleModal")
                 this.cardRemoveButton.setAttribute('data-bs-toggle', "modal")
 
-
                 card.appendChild(cardTitle)
                 card.appendChild(cardEditButton)
                 card.appendChild(this.cardRemoveButton)
@@ -125,29 +110,33 @@ export class Category {
             })
         })
 
-        document.getElementById('confirm-delete').onclick = () => {
-            this.removeCardRequest()
-        }
+        document.getElementById('confirm-delete').onclick = () => this.removeCardRequest()
 
-        document.getElementById('cancel-delete').onclick = () => {
-            document.getElementById('exampleModal').style.display = 'none'
-            if (document.getElementById('exampleModal').classList.contains('show')) {
-                document.getElementById('exampleModal').classList.remove('show')
-                console.log('1')
-            }
-            // location.reload()
-
-            if (document.getElementById('exampleModal').getAttribute('aria-modal')) {
-                document.getElementById('exampleModal').removeAttribute('aria-modal')
-                console.log('2')
-            }
-
-            if (document.getElementById('exampleModal').getAttribute('role')) {
-                document.getElementById('exampleModal').removeAttribute('role')
-                console.log('3')
-            }
-
-        }
+        // document.getElementById('cancel-delete').onclick = () => {
+        //
+        //     document.getElementsByClassName('modal-backdrop')[0].style.display = 'none'
+        //     document.getElementById('exampleModal').style.display = 'none'
+        //
+        //     if (document.getElementsByTagName('body')[0].classList.contains('modal-open')) {
+        //         document.getElementsByTagName('body')[0].classList.remove('modal-open')
+        //     }
+        //     console.log()
+        //     if (document.getElementById('exampleModal').classList.contains('show')) {
+        //         document.getElementById('exampleModal').classList.remove('show')
+        //         console.log('1')
+        //     }
+            // // location.reload()
+            //
+            // if (document.getElementById('exampleModal').getAttribute('aria-modal')) {
+            //     document.getElementById('exampleModal').removeAttribute('aria-modal')
+            //     console.log('2')
+            // }
+            //
+            // if (document.getElementById('exampleModal').getAttribute('role')) {
+            //     document.getElementById('exampleModal').removeAttribute('role')
+            //     console.log('3')
+            // }
+        // }
     }
 
     async removeCardRequest() {
@@ -157,7 +146,7 @@ export class Category {
                 if (!result.error) {
                     location.reload()
                 }
-                alert(result.message)
+                console.log(result.message)
             }
         } catch (e) {
             console.log(e)
@@ -168,9 +157,8 @@ export class Category {
         let editButtons = document.querySelectorAll('button[data-name="edit"]')
         editButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                console.log("this.editCardId", btn)
                 this.editCardId = btn.getAttribute('data-id')
-                location.href = `#/edit-${this.page}?id=${this.editCardId}`
+                location.href = `#/${this.page}/edit-${this.page}?id=${this.editCardId}`
             })
         })
     }

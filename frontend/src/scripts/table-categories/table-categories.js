@@ -26,26 +26,34 @@ export class TableCategories {
             location.href = `#/create_income-or-expenses?operations=expense`
         }
 
-        this.getDataTable()
-
-        this.showFilterBtn()
-
-
-    }
-
-    async getDataTable() {
-
         const dateFrom = document.getElementById('date-from')
         const dateTo = document.getElementById('date-to')
+
         const dateInterval = document.getElementById('date-interval')
 
         dateInterval.onchange = () => {
 
-            this.dateInterval = `&dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
+            const dateInterval = `&dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
 
-            console.log('dateInterval', this.dateInterval)
+            if (dateFrom.value && dateTo.value) {
+                this.dateInterval = dateInterval
+                this.getDataTable()
+                console.log(this.dateInterval)
+                console.log('Получили данные, отправляем запрос')
+            }
+
         }
 
+        this.getDataTable()
+
+        this.showFilterBtn()
+
+    }
+
+    async getDataTable() {
+        if (this.filterValue === 'interval' && this.dateInterval === '') {
+            return
+        }
         try {
             const result = await CustomHttp.request(`${config.host}/operations?period=${this.filterValue}${this.dateInterval}`)
             if (result) {
@@ -67,21 +75,29 @@ export class TableCategories {
             document.getElementById('thead').appendChild(title)
         })
 
-        config.dataBtn.forEach(btn => {
+        let active = true;
+
+        config.dataBtn.forEach((btn, index) => {
             const filterBtn = document.createElement('button')
             filterBtn.innerText = btn
             filterBtn.setAttribute('data-name', 'filter')
             filterBtn.className = 'btn btn-light border border-secondary me-3 px-3'
 
+            if (active && index === 0) filterBtn.className = 'btn btn-secondary border border-secondary me-3 px-3'
+
             filterBtn.addEventListener('click', () => {
+                active = false
                 this.btnFilterClick = filterBtn
+                this.dateInterval = ''
 
                 let allFilterBtn = document.querySelectorAll('button[data-name="filter"]')
                 allFilterBtn.forEach(el => {
                     el.className = 'btn btn-light border border-secondary me-3 px-3'
                 })
 
-                this.btnFilterClick.className = 'btn btn-secondary border border-secondary me-3 px-3'
+                // this.btnFilterClick.classList.add() = 'btn btn-secondary border border-secondary me-3 px-3'
+                this.btnFilterClick.classList.add('btn-secondary')
+                this.btnFilterClick.classList.remove('btn-light')
 
                 document.getElementById('tbody').innerHTML = ' '
 
@@ -93,11 +109,11 @@ export class TableCategories {
             document.getElementById('btn-wrapper').appendChild(filterBtn)
 
         })
+
+
     }
 
     showOperationsWithFilter() {
-
-        console.log('this.btnFilterClick', this.btnFilterClick.innerText)
 
         const dateToday = `${new Date().getFullYear()}-${(new Date().getMonth()) + 1}-${new Date().getDate()}`
 
@@ -120,18 +136,20 @@ export class TableCategories {
             case 'Интервал':
                 this.filterValue = 'interval'
                 break
-            // default:
-            // здесь нужно сделать today
-            // break
         }
         this.getDataTable()
+    }
 
-        console.log("this.filterValue", this.filterValue)
+    createBlock(tag, className) {
+        const block = document.createElement(tag)
+        if (className) {
+            block.classList.add(className)
+        }
+        return block
     }
 
     showTable() {
 
-        // console.log('this.operations', this.operations)
         if (this.operations) {
 
             const tbody = document.getElementById('tbody')
@@ -147,8 +165,7 @@ export class TableCategories {
                 type.className = operation.type === 'income' ? 'text-center text-success' : 'text-center text-danger'
                 type.innerText = operation.type === 'income' ? 'доход' : 'расход'
 
-                const category = document.createElement('td')
-                category.className = `text-center`
+                const category = this.createBlock('td', `text-center`)
                 category.innerText = operation.category || null
 
                 const amount = document.createElement('td')
@@ -187,6 +204,7 @@ export class TableCategories {
                 editImg.setAttribute('src', './src/static/images/pen-icon.png')
                 editImg.setAttribute('alt', 'pen')
                 edit.appendChild(editImg)
+
 
                 tr.appendChild(number)
                 tr.appendChild(type)

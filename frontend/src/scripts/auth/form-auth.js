@@ -1,8 +1,8 @@
-import {CustomHttp} from "../../services/custom-http.js";
-import config from "../../config/config.js";
-import {Auth} from "../../services/auth.js";
+import {CustomHttp} from "../../../services/custom-http.js";
+import config from "../../../config/config.js";
+import {Auth} from "../../../services/auth.js";
 
-export class Form {
+export class FormAuth {
 
     constructor(page) {
         this.page = page
@@ -76,9 +76,6 @@ export class Form {
 
             item.element.onchange = function () {
                 that.validateField.call(that, item, this)
-                // console.log("that", that)
-                // console.log("item", item)
-                // console.log("this", this)
             }
         })
 
@@ -96,11 +93,9 @@ export class Form {
     validateField(field, element) {
         console.log(element.value)
         if (!element.value || !element.value.match(field.regex)) {
-            // console.log('RED')
             element.style.borderColor = 'red'
             field.valid = false
         } else {
-            // console.log("GREEN")
             element.style.borderColor = '#ced4da'
             field.valid = true
         }

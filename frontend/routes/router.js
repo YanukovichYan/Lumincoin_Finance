@@ -1,9 +1,10 @@
 import {Category} from "../src/scripts/incomes-and-expenses/category.js";
-import {Form} from "../src/scripts/form.js";
 import {Auth} from "../services/auth.js";
 import {Edit} from "../src/scripts/incomes-and-expenses/edit.js";
 import {TableCategories} from "../src/scripts/table-categories/table-categories.js";
-import {Create_incomeOrExpenses} from "../src/scripts/table-categories/create_income-or-expenses.js";
+import {Form} from "../src/scripts/table-categories/form.js";
+import {Main} from "../src/scripts/main/main.js";
+import {FormAuth} from "../src/scripts/auth/form-auth.js";
 
 export class Router {
     constructor() {
@@ -13,14 +14,13 @@ export class Router {
         this.profileElement = document.getElementById('profile')
         this.profileNameElement = document.getElementById('profile-name')
 
-
         this.routes = [
             {
                 route: '#/signup',
                 title: 'Регистрация',
                 template: 'src/templates/auth/signup.html',
                 load: () => {
-                    new Form('signup');
+                    new FormAuth('signup');
                 }
             },
             {
@@ -28,7 +28,7 @@ export class Router {
                 title: 'Вход в систему',
                 template: 'src/templates/auth/login.html',
                 load: () => {
-                    new Form('login');
+                    new FormAuth('login');
                 }
             },
             {
@@ -36,7 +36,7 @@ export class Router {
                 title: 'Главная',
                 template: 'src/templates/main/main.html',
                 load: () => {
-                    // new Main()
+                    new Main()
                 }
             },
             {
@@ -98,17 +98,17 @@ export class Router {
             {
                 route: '#/create_income-or-expenses',
                 title: 'Создание дохода/расхода',
-                template: 'src/templates/table-categories/create_income-or-expenses.html',
+                template: 'src/templates/table-categories/form.html',
                 load: () => {
-                    new Create_incomeOrExpenses('create');
+                    new Form('create');
                 }
             },
             {
                 route: '#/edit_income-or-expense',
                 title: 'Редактирование дохода/расхода',
-                template: 'src/templates/table-categories/create_income-or-expenses.html',
+                template: 'src/templates/table-categories/form.html',
                 load: () => {
-                    new Create_incomeOrExpenses('edit');
+                    new Form('edit');
                 }
             },
         ]

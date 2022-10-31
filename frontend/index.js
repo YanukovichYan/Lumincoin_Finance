@@ -3,7 +3,7 @@ import {CustomHttp} from "./services/custom-http.js";
 import config from "./config/config.js";
 import {Auth} from "./services/auth.js";
 
-class App {
+class Index {
     constructor() {
         this.router = new Router();
         window.addEventListener('DOMContentLoaded', this.handleRouteChanging.bind(this));
@@ -36,4 +36,4 @@ class App {
 }
 
 
-(new App());
+(new Index());

@@ -1,0 +1,42 @@
+.nav-item:hover {
+    background-color: #0d6efd!important;
+}
+
+#sidebar a {
+    color: black;
+}
+
+.nav-item:hover a {
+    color: #fff!important;
+}
+
+.nav-item:hover svg {
+    fill: #fff!important;
+}
+
+/*Dropdown*/
+#dropdown-button:hover {
+    background-color: #0d6efd!important;
+    color: #fff!important;
+}
+
+#dropdown-item li:hover {
+    background-color: #0d6efd!important;
+}
+
+#dropdown-item li:hover a {
+    color: #fff!important;
+}
+
+.active {
+    background-color: #0d6efd!important;
+    color: #fff!important;
+}
+
+.active a {
+    color: #fff!important;
+}
+
+.active svg {
+    fill: white;
+}

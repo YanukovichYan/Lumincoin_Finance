@@ -33,7 +33,8 @@ export class TableCategories {
             }
         }
         this.getDataTable()
-        this.showFilterBtnAndThead()
+        this.showThead()
+        this.showFilterBtn()
     }
 
     async getDataTable() {
@@ -52,14 +53,16 @@ export class TableCategories {
         }
     }
 
-    showFilterBtnAndThead() {
+    showThead() {
         config.theadTitle.forEach(ttl => {
             const title = document.createElement('th')
             title.innerText = ttl
             title.className = 'text-center'
             document.getElementById('thead').appendChild(title)
         })
+    }
 
+    showFilterBtn() {
         let active = true;
         config.dataBtn.forEach((btn, index) => {
             const filterBtn = document.createElement('button')
@@ -88,13 +91,13 @@ export class TableCategories {
 
                 document.getElementById('tbody').innerHTML = ' '
 
-                this.showOperationsWithFilter()
+                this.selectOperationsWithFilter()
             })
             document.getElementById('btn-wrapper').appendChild(filterBtn)
         })
     }
 
-    showOperationsWithFilter() {
+    selectOperationsWithFilter() {
         switch (this.btnFilterClick.innerText) {
             case 'Сегодня':
                 this.filterValue = `interval&dateFrom=${this.dateToday}&dateTo=${this.dateToday}`

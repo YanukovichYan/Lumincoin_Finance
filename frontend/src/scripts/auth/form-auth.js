@@ -8,7 +8,7 @@ export class FormAuth {
         this.page = page
         this.agreeElement = document.getElementById('agree')
         this.processButton = document.getElementById('process')
-        this.remember = document.getElementById('process')
+        this.remember = document.getElementById('remember')
 
         if (localStorage.getItem(Auth.accessTokenKey)) {
             location.href = '#/main'

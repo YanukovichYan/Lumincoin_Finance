@@ -63,9 +63,9 @@ export class Auth {
                 const result = await response.json()
                 // console.log(result)
                 if (result) {
-                    if (result.error) {
-                        console.log("Ошибка refreshToken-a")
-                    }
+                    // if (result.error) {
+                    //     console.log("Ошибка refreshToken-a")
+                    // }
                     // console.log("Записываю в localStorage", result)
                     this.setTokens(result.tokens.accessToken, result.tokens.refreshToken)
                     return true
@@ -79,7 +79,7 @@ export class Auth {
         // для чего эти 3 строчки?
 
         this.removeTokens()
-        // location.href = '#/login'
+        location.href = '#/login'
         return false
     }
 }

@@ -76,10 +76,8 @@ export class Auth {
         }
         // localStorage.removeItem(this.userInfoKey)
 
-        // для чего эти 3 строчки?
-
         this.removeTokens()
-        location.href = '#/login'
+        // location.href = '#/login'
         return false
     }
 }

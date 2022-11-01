@@ -167,7 +167,7 @@ export class FormAuth {
             const result = await CustomHttp.request(`${config.host}/login`, 'POST', {
                 email: email,
                 password: password,
-                rememberMe: this.remember.checked
+                rememberMe: this.remember?.checked || false
             })
 
             if (result) {

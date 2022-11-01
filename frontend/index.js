@@ -22,16 +22,16 @@ class Index {
         //     location.href = '#/login'
         // }
 
-        // if (localStorage.getItem(Auth.accessTokenKey)) {
-        //     try {
-        //         const result = await CustomHttp.request(`${config.host}/balance`)
-        //         if (result.balance) {
-        //             document.getElementById('balance').innerText = `${result.balance}$`
-        //         }
-        //     } catch (e) {
-        //         console.log(e)
-        //     }
-        // }
+        if (localStorage.getItem(Auth.accessTokenKey)) {
+            try {
+                const result = await CustomHttp.request(`${config.host}/balance`)
+                if (result.balance) {
+                    document.getElementById('balance').innerText = `${result.balance}$`
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
     }
 
     activeSidebarItem() {
@@ -59,7 +59,7 @@ class Index {
             dropdownButton.classList.toggle('active')
             dropdownButton.classList.toggle('rounded')
 
-            if(document.getElementById('dashboard-collapse').classList.contains('active')) {
+            if (document.getElementById('dashboard-collapse').classList.contains('active')) {
                 dropdownButton.classList.add('active')
             }
         }

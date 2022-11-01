@@ -18,6 +18,7 @@
 #dropdown-button:hover {
     background-color: #0d6efd!important;
     color: #fff!important;
+    border-radius: 6px!important;
 }
 
 #dropdown-item li:hover {

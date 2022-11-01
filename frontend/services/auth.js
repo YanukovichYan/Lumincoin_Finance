@@ -63,21 +63,15 @@ export class Auth {
                 const result = await response.json()
                 // console.log(result)
                 if (result) {
-                    // if (result.error) {
-                    //     console.log("Ошибка refreshToken-a")
-                    // }
                     // console.log("Записываю в localStorage", result)
                     this.setTokens(result.tokens.accessToken, result.tokens.refreshToken)
                     return true
-                } else {
-                    console.log("RefreshToken = null || expired. --- Пройдите регистрацию")
                 }
             }
         }
-        // localStorage.removeItem(this.userInfoKey)
-
+        localStorage.removeItem(this.userInfoKey)
         this.removeTokens()
-        // location.href = '#/login'
+        location.href = '#/login'
         return false
     }
 }

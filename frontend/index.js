@@ -22,16 +22,16 @@ class Index {
         //     location.href = '#/login'
         // }
 
-        if (localStorage.getItem(Auth.accessTokenKey)) {
-            try {
-                const result = await CustomHttp.request(`${config.host}/balance`)
-                if (result.balance) {
-                    document.getElementById('balance').innerText = `${result.balance}$`
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
+        // if (localStorage.getItem(Auth.accessTokenKey)) {
+        //     try {
+        //         const result = await CustomHttp.request(`${config.host}/balance`)
+        //         if (result.balance) {
+        //             document.getElementById('balance').innerText = `${result.balance}$`
+        //         }
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // }
     }
 
     activeSidebarItem() {
@@ -48,10 +48,10 @@ class Index {
 
             if (currentUrl === 'income' || currentUrl === 'expense') {
                 document.getElementById('dashboard-collapse').classList.add('show')
-                dropdownButton.className = 'btn btn-primary w-100 rounded-top justify-content-between btn-toggle d-inline-flex align-items-center border-0'
+                dropdownButton.classList.add('btn-primary')
             } else {
                 document.getElementById('dashboard-collapse').classList.remove('show')
-                dropdownButton.className = 'btn w-100 rounded-top justify-content-between btn-toggle d-inline-flex align-items-center border-0'
+                dropdownButton.classList.remove('btn-primary')
             }
         })
 
@@ -59,12 +59,9 @@ class Index {
             dropdownButton.classList.toggle('active')
             dropdownButton.classList.toggle('rounded')
 
-            if (document.getElementById('dashboard-collapse').classList.contains('active')) {
-                dropdownButton.classList.add('active')
-            }
+            if (document.getElementById('dashboard-collapse').classList.contains('active')) dropdownButton.classList.add('active')
         }
     }
 }
-
 
 (new Index());

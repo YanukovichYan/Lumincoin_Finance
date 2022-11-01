@@ -214,8 +214,8 @@ export class Main {
             return object
         }, {})
 
-        console.log('newObjectIncome', newObjectIncome)
-        console.log('newObjectExpense', newObjectExpense)
+        // console.log('newObjectIncome', newObjectIncome)
+        // console.log('newObjectExpense', newObjectExpense)
 
         // console.log('Object.entries(income)', Object.entries(newObjectIncome))
         // console.log('Object.entries(expense)', Object.entries(newObjectExpense))
@@ -228,8 +228,8 @@ export class Main {
             this.categoriesExpense.push(category[0])
         })
 
-        console.log('this.categoriesIncome', this.categoriesIncome)
-        console.log('this.categoriesExpense', this.categoriesExpense)
+        // console.log('this.categoriesIncome', this.categoriesIncome)
+        // console.log('this.categoriesExpense', this.categoriesExpense)
 
         Object.entries(newObjectIncome).forEach(category => {
             let amount = 0
@@ -247,8 +247,8 @@ export class Main {
             this.expenseDataAmount.push(amount)
         })
 
-        console.log('incomeDataAmount', this.incomeDataAmount)
-        console.log('expenseDataAmount', this.expenseDataAmount)
+        // console.log('incomeDataAmount', this.incomeDataAmount)
+        // console.log('expenseDataAmount', this.expenseDataAmount)
 
         if (this.incomeDataAmount.length) {
             this.incomeChartShow()

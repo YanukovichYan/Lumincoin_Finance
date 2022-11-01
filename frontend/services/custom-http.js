@@ -13,13 +13,9 @@ export class CustomHttp {
 
         let token = localStorage.getItem(Auth.accessTokenKey)
 
-        if (token) {
-            params.headers['x-auth-token'] = token
-        }
+        if (token) params.headers['x-auth-token'] = token
 
-        if (body) {
-            params.body = JSON.stringify(body)
-        }
+        if (body) params.body = JSON.stringify(body)
 
         const response = await fetch(url, params)
 
@@ -33,7 +29,7 @@ export class CustomHttp {
             if (response.status === 401) {
                 // console.log("HERE")
                 const result = await Auth.refresh()
-                // console.log('result', result)
+                // console.log('result-refresh', result)
                 if (result) {
                     return await this.request(url, method, body)
                 } else {

@@ -214,7 +214,6 @@ export class TableCategories {
         })
 
         document.getElementById('confirm-delete').onclick = () => this.removeOptionRequest()
-        document.getElementById('cancel-delete').onclick = () => location.reload()
     }
 
     async removeOptionRequest() {

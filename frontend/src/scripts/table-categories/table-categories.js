@@ -41,6 +41,8 @@ export class TableCategories {
     }
 
     async getDataTable() {
+        await Sidebar.getBalance()
+
         if (this.filterValue === 'interval' && this.dateInterval === '') {
             return
         }
@@ -51,7 +53,6 @@ export class TableCategories {
                 this.operations = result
                 document.getElementById('tbody').innerHTML = ' '
                 this.showTable()
-                await Sidebar.getBalance()
             }
             if (result.length === 0) {
                 // await Sidebar.getBalance()
@@ -59,6 +60,81 @@ export class TableCategories {
         } catch (e) {
             console.log(e)
         }
+    }
+
+    showTable() {
+        if (this.operations) {
+
+            const tbody = document.getElementById('tbody')
+
+            this.operations.forEach((operation, index) => {
+                const tr = document.createElement('tr')
+
+                const number = document.createElement('td')
+                number.className = `text-center fw-bold`
+                number.innerText = `${index + 1} `
+                number.innerText = `${index + 1} `
+
+                const type = document.createElement('td')
+                type.className = operation.type === 'income' ? 'text-center text-success' : 'text-center text-danger'
+                type.innerText = operation.type === 'income' ? 'доход' : 'расход'
+
+                const category = document.createElement('td')
+                category.className = 'text-center'
+                // this.createBlock('td', `text-center`)
+                category.innerText = operation.category || null
+
+                const amount = document.createElement('td')
+                amount.className = `text-center`
+                amount.innerText = `${operation.amount} $`
+
+                const validDate = operation.date.split('-')
+                const date = document.createElement('td')
+                date.className = `text-center`
+                date.innerText = `${validDate[2]}.${validDate[1]}.${validDate[0]}`
+
+                const comment = document.createElement('td')
+                comment.className = `text-center`
+                comment.innerText = operation.comment
+
+                const trash = document.createElement('td')
+                trash.className = `text-center`
+                trash.setAttribute('role', 'button')
+                trash.setAttribute('data-name', 'delete')
+                trash.setAttribute('data-id', operation.id)
+                trash.setAttribute('data-bs-target', "#exampleModal")
+                trash.setAttribute('data-bs-toggle', "modal")
+
+                const trashImg = document.createElement('img')
+                trashImg.setAttribute('src', './src/static/images/trash-icon.png')
+                trashImg.setAttribute('alt', 'trash')
+                trash.appendChild(trashImg)
+
+                const edit = document.createElement('td')
+                edit.className = `text-center`
+                edit.setAttribute('role', 'button')
+                edit.setAttribute('data-name', 'edit')
+                edit.setAttribute('data-id', operation.id)
+
+                const editImg = document.createElement('img')
+                editImg.setAttribute('src', './src/static/images/pen-icon.png')
+                editImg.setAttribute('alt', 'pen')
+                edit.appendChild(editImg)
+
+                tr.appendChild(number)
+                tr.appendChild(type)
+                tr.appendChild(category)
+                tr.appendChild(amount)
+                tr.appendChild(date)
+                tr.appendChild(comment)
+                tr.appendChild(trash)
+                tr.appendChild(edit)
+
+                tbody.appendChild(tr)
+            })
+        }
+        this.removeOption()
+        this.edit()
     }
 
     showThead() {
@@ -137,81 +213,6 @@ export class TableCategories {
     //     return block
     // }
 
-    showTable() {
-        if (this.operations) {
-
-            const tbody = document.getElementById('tbody')
-
-            this.operations.forEach((operation, index) => {
-                const tr = document.createElement('tr')
-
-                const number = document.createElement('td')
-                number.className = `text-center fw-bold`
-                number.innerText = `${index + 1} `
-                number.innerText = `${index + 1} `
-
-                const type = document.createElement('td')
-                type.className = operation.type === 'income' ? 'text-center text-success' : 'text-center text-danger'
-                type.innerText = operation.type === 'income' ? 'доход' : 'расход'
-
-                const category = document.createElement('td')
-                category.className = 'text-center'
-                // this.createBlock('td', `text-center`)
-                category.innerText = operation.category || null
-
-                const amount = document.createElement('td')
-                amount.className = `text-center`
-                amount.innerText = `${operation.amount} $`
-
-                const validDate = operation.date.split('-')
-                const date = document.createElement('td')
-                date.className = `text-center`
-                date.innerText = `${validDate[2]}.${validDate[1]}.${validDate[0]}`
-
-                const comment = document.createElement('td')
-                comment.className = `text-center`
-                comment.innerText = operation.comment
-
-                const trash = document.createElement('td')
-                trash.className = `text-center`
-                trash.setAttribute('role', 'button')
-                trash.setAttribute('data-name', 'delete')
-                trash.setAttribute('data-id', operation.id)
-                trash.setAttribute('data-bs-target', "#exampleModal")
-                trash.setAttribute('data-bs-toggle', "modal")
-
-                const trashImg = document.createElement('img')
-                trashImg.setAttribute('src', './src/static/images/trash-icon.png')
-                trashImg.setAttribute('alt', 'trash')
-                trash.appendChild(trashImg)
-
-                const edit = document.createElement('td')
-                edit.className = `text-center`
-                edit.setAttribute('role', 'button')
-                edit.setAttribute('data-name', 'edit')
-                edit.setAttribute('data-id', operation.id)
-
-                const editImg = document.createElement('img')
-                editImg.setAttribute('src', './src/static/images/pen-icon.png')
-                editImg.setAttribute('alt', 'pen')
-                edit.appendChild(editImg)
-
-                tr.appendChild(number)
-                tr.appendChild(type)
-                tr.appendChild(category)
-                tr.appendChild(amount)
-                tr.appendChild(date)
-                tr.appendChild(comment)
-                tr.appendChild(trash)
-                tr.appendChild(edit)
-
-                tbody.appendChild(tr)
-            })
-        }
-        this.removeOption()
-        this.edit()
-    }
-
     async removeOption() {
         let removeOptions = document.querySelectorAll('td[data-name="delete"]')
 
@@ -253,6 +254,7 @@ export class TableCategories {
         }
         console.log(this.value)
         console.log(this.optionById.amount)
+
         try {
             const result = await CustomHttp.request(`${config.host}/operations/${this.removeOptionId}`, 'DELETE')
             if (result) {

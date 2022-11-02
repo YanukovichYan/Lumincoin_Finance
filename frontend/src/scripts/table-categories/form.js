@@ -32,10 +32,80 @@ export class Form {
             saveBtn.onclick = () => this.edit()
             document.getElementById('cancel').onclick = () => location.href = '#/table-categories'
 
-            this.getOptionsById()
+            this.getOperationById()
         }
         this.fillingForm()
     }
+
+    async getOperationById() {
+        this.optionId = location.hash.split('=')[1]
+        try {
+            const result = await CustomHttp.request(`${config.host}/operations/${this.optionId}`)
+            if (result) {
+                if (result.error) {
+                    alert(result.message)
+                }
+                this.optionById = result
+                this.editFormValue()
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    editFormValue() {
+        this.optionById.type === 'income' ? this.selectType.selectedIndex = 1 : this.selectType.selectedIndex = 2
+        this.optionById.type === 'income' ? this.getType = 'income' : this.getType = 'expense'
+        this.urlSelectType = this.getType
+        this.getCategories()
+        this.amount.value = this.optionById.amount
+        this.date.value = this.optionById.date
+        this.comment.value = this.optionById.comment
+    }
+
+    async getCategories() {
+        if (this.urlSelectType) {
+            try {
+                const result = await CustomHttp.request(`${config.host}/categories/${this.urlSelectType}`)
+                if (result) {
+                    this.categories = result
+                    if (result.length === 0) {
+                        console.log('Категорий нет!')
+                    }
+                    await Sidebar.getBalance()
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        this.showCategoryOptions()
+    }
+
+    showCategoryOptions() {
+        if (this.categories) {
+            const defaultOption = document.createElement('option')
+            defaultOption.innerText = 'Категория...'
+            defaultOption.setAttribute('hidden', 'hidden')
+            defaultOption.setAttribute('selected', 'selected')
+            document.getElementById('select-category').appendChild(defaultOption)
+
+            this.categories.forEach(option => {
+                const optionCategory = document.createElement('option')
+                optionCategory.innerText = option.title
+                optionCategory.value = option.id
+                document.getElementById('select-category').appendChild(optionCategory)
+            })
+            if (this.page === 'edit') this.showSelectCategory()
+        }
+    }
+
+    showSelectCategory() {
+        if (this.categories) {
+            const selectedCategoryIndex = this.categories.findIndex(category => category.title === this.optionById.category)
+            this.selectCategory.selectedIndex = selectedCategoryIndex + 2
+        }
+    }
+
 
     fillingForm() {
 
@@ -67,43 +137,6 @@ export class Form {
         document.getElementById('cancel').onclick = () => location.href = '#/table-categories'
     }
 
-    async getCategories() {
-        // await Sidebar.updateBalance(0)
-
-        if (this.urlSelectType) {
-            try {
-                const result = await CustomHttp.request(`${config.host}/categories/${this.urlSelectType}`)
-                if (result) {
-                    this.categories = result
-                    if (result.length === 0) {
-                        console.log('Категорий нет!')
-                    }
-                    await Sidebar.getBalance()
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
-        this.showCategoryOptions()
-    }
-
-    showCategoryOptions() {
-        if (this.categories) {
-            const defaultOption = document.createElement('option')
-            defaultOption.innerText = 'Категория...'
-            defaultOption.setAttribute('hidden', 'hidden')
-            defaultOption.setAttribute('selected', 'selected')
-            document.getElementById('select-category').appendChild(defaultOption)
-            this.categories.forEach(option => {
-                const optionCategory = document.createElement('option')
-                optionCategory.innerText = option.title
-                optionCategory.value = option.id
-                document.getElementById('select-category').appendChild(optionCategory)
-            })
-            if (this.page === 'edit') this.showSelectCategory()
-        }
-    }
-
     async create() {
 
         const currentBalance = await Sidebar.getBalance()
@@ -116,6 +149,7 @@ export class Form {
         }
         console.log(+(this.amount.value))
         console.log(this.value)
+
         try {
             const result = await CustomHttp.request(`${config.host}/operations`, 'POST', this.createFormValue)
             if (result) {
@@ -130,39 +164,6 @@ export class Form {
             }
         } catch (e) {
             console.log(e)
-        }
-    }
-
-    async getOptionsById() {
-        this.optionId = location.hash.split('=')[1]
-        try {
-            const result = await CustomHttp.request(`${config.host}/operations/${this.optionId}`)
-            if (result) {
-                if (result.error) {
-                    alert(result.message)
-                }
-                this.optionById = result
-                this.editFormValue()
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    editFormValue() {
-        this.optionById.type === 'income' ? this.selectType.selectedIndex = 1 : this.selectType.selectedIndex = 2
-        this.optionById.type === 'income' ? this.getType = 'income' : this.getType = 'expense'
-        this.urlSelectType = this.getType
-        this.getCategories()
-        this.amount.value = this.optionById.amount
-        this.date.value = this.optionById.date
-        this.comment.value = this.optionById.comment
-    }
-
-    showSelectCategory() {
-        if (this.categories) {
-            const selectedCategoryIndex = this.categories.findIndex(category => category.title === this.optionById.category)
-            this.selectCategory.selectedIndex = selectedCategoryIndex + 2
         }
     }
 

@@ -5,7 +5,6 @@ import config from "../../config/config.js";
 export class Sidebar {
 
     static async getBalance() {
-
         if (localStorage.getItem(Auth.accessTokenKey)) {
             try {
                 const result = await CustomHttp.request(`${config.host}/balance`)
@@ -17,7 +16,6 @@ export class Sidebar {
                 console.log(e)
             }
         }
-
     }
 
     static async updateBalance(newBalance) {
@@ -33,6 +31,5 @@ export class Sidebar {
             }
         }
     }
-
 }
 

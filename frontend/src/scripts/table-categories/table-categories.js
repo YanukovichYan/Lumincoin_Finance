@@ -1,5 +1,6 @@
 import {CustomHttp} from "../../../services/custom-http.js";
 import config from "../../../config/config.js";
+import {Sidebar} from "../sidebar.js";
 
 export class TableCategories {
 
@@ -11,6 +12,8 @@ export class TableCategories {
         this.btnEditId = null
         this.dateInterval = ''
         this.btnFilterClick = null
+        this.optionById = null
+        this.value = null
         this.init()
     }
 
@@ -43,10 +46,15 @@ export class TableCategories {
         }
         try {
             const result = await CustomHttp.request(`${config.host}/operations?period=${this.filterValue}${this.dateInterval}`)
+            // console.log(result)
             if (result) {
                 this.operations = result
                 document.getElementById('tbody').innerHTML = ' '
                 this.showTable()
+                await Sidebar.getBalance()
+            }
+            if (result.length === 0) {
+                // await Sidebar.getBalance()
             }
         } catch (e) {
             console.log(e)
@@ -213,16 +221,45 @@ export class TableCategories {
             })
         })
 
-        document.getElementById('confirm-delete').onclick = () => this.removeOptionRequest()
+        document.getElementById('confirm-delete').onclick = () => {
+            this.getOptionsById()
+            this.removeOptionRequest()
+        }
+    }
+
+    async getOptionsById() {
+        try {
+            const result = await CustomHttp.request(`${config.host}/operations/${this.removeOptionId}`)
+            if (result) {
+                if (result.error) {
+                    alert(result.message)
+                }
+                this.optionById = result
+                console.log('this.optionById', this.optionById)
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     async removeOptionRequest() {
+        const currentBalance = await Sidebar.getBalance()
+        console.log('currentBalance', currentBalance)
+
+        if (this.optionById?.type === 'income') {
+            this.value = currentBalance - this.optionById.amount
+        } else {
+            this.value = currentBalance + this.optionById.amount
+        }
+        console.log(this.value)
+        console.log(this.optionById.amount)
         try {
             const result = await CustomHttp.request(`${config.host}/operations/${this.removeOptionId}`, 'DELETE')
             if (result) {
                 if (!result.error) {
                     console.log(result.message)
-                    location.reload()
+                    await Sidebar.updateBalance(this.value)
+                    await this.getDataTable()
                 }
             }
         } catch (e) {

@@ -174,7 +174,5 @@ export class Router {
             document.getElementById('wrapper-content').style.cssText = `margin:unset; padding:unset`
             this.mainTitleElement.style.cssText = 'display:block!important'
         }
-
-
     }
 }

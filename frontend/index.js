@@ -1,7 +1,4 @@
 import {Router} from './routes/router.js'
-import {CustomHttp} from "./services/custom-http.js";
-import config from "./config/config.js";
-import {Auth} from "./services/auth.js";
 
 class Index {
     constructor() {
@@ -12,27 +9,12 @@ class Index {
 
     handleRouteChanging() {
         this.router.openRoute();
-        this.getBalance()
         this.activeSidebarItem()
     }
 
-    async getBalance() {
-
-        // if (localStorage.getItem(Auth.accessTokenKey) === null) {
-        //     location.href = '#/login'
-        // }
-
-        // if (localStorage.getItem(Auth.accessTokenKey)) {
-        //     try {
-        //         const result = await CustomHttp.request(`${config.host}/balance`)
-        //         if (result.balance) {
-        //             document.getElementById('balance').innerText = `${result.balance}$`
-        //         }
-        //     } catch (e) {
-        //         console.log(e)
-        //     }
-        // }
-    }
+    // if (localStorage.getItem(Auth.accessTokenKey) === null) {
+    //     location.href = '#/login'
+    // }
 
     activeSidebarItem() {
         let navLinks = document.querySelectorAll('[data-name="nav"]')
@@ -42,6 +24,7 @@ class Index {
         navLinks.forEach(link => {
             if (currentUrl === link.querySelector('a').getAttribute('href').split('/')[1]) {
                 link.classList.add('active')
+                dropdownButton.classList.remove('active')
             } else {
                 link.classList.remove('active')
             }

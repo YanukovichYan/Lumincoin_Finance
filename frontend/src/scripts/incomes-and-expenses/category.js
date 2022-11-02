@@ -1,5 +1,7 @@
 import {CustomHttp} from "../../../services/custom-http.js";
 import config from "../../../config/config.js";
+import {Sidebar} from "../sidebar.js";
+import {SeparationCategories} from "../../../services/separationCategories.js";
 
 export class Category {
 
@@ -10,10 +12,12 @@ export class Category {
         this.removeCardId = null
         this.editCardId = null
         this.urlParams = null
+        this.amount = null
 
         this.page === "create-income" ? this.urlParams = 'income' : this.urlParams = 'expense'
 
         this.page === 'create-income' || this.page === 'create-expense' ? this.create() : this.init()
+
     }
 
     async init() {
@@ -25,7 +29,10 @@ export class Category {
                     console.log('Категория пуста!')
                     document.getElementById('empty-block').style.cssText = 'display:block!important'
                 }
+                document.getElementById('card-wrapper').innerHTML = ' '
                 this.showCategories()
+                await Sidebar.getBalance()
+                this.getDataTable()
                 // console.log("CATEGORY", result)
             }
         } catch (e) {
@@ -34,7 +41,8 @@ export class Category {
         document.getElementById('create-category').onclick = () => location.href = `#/${this.page}/create-${this.page}`
     }
 
-    create() {
+    async create() {
+        await Sidebar.getBalance()
         this.createButton = document.getElementById('create-button')
         this.createInput = document.getElementById('create-input')
 
@@ -107,6 +115,7 @@ export class Category {
         removeButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 this.removeCardId = btn.getAttribute('data-id')
+                this.removeDataCategory()
             })
         })
         document.getElementById('confirm-delete').onclick = () => this.removeCardRequest()
@@ -117,8 +126,10 @@ export class Category {
             const result = await CustomHttp.request(`${config.host}/categories/${this.page}/${this.removeCardId}`, 'DELETE')
             if (result) {
                 if (!result.error) {
-                    location.reload()
+                    // location.reload()
                 }
+                this.init()
+                await Sidebar.updateBalance(this.amount)
                 console.log(result.message)
             }
         } catch (e) {
@@ -135,4 +146,36 @@ export class Category {
             })
         })
     }
+
+    async getDataTable() {
+        try {
+            const result = await CustomHttp.request(`${config.host}/operations?period=all`)
+            if (result) {
+                this.operations = result
+                await Sidebar.getBalance()
+                // console.log('this.operations', this.operations)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async removeDataCategory() {
+        if (this.removeCardId) {
+            let amount = SeparationCategories.getSeparateCategory(this.operations, this.removeCardId, this.categories)
+
+            const currentBalance = await Sidebar.getBalance()
+
+            if (this.page === 'income') {
+                this.amount = currentBalance - amount
+            } else {
+                this.amount = currentBalance + amount
+            }
+
+            console.log(currentBalance)
+            console.log('111', this.amount)
+        }
+    }
+
+
 }

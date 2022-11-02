@@ -1,5 +1,6 @@
 import {CustomHttp} from "../../../services/custom-http.js";
 import config from "../../../config/config.js";
+import {Sidebar} from "../sidebar.js";
 
 export class Edit {
 
@@ -17,6 +18,7 @@ export class Edit {
             const result = await CustomHttp.request(`${config.host}/categories/${this.page}/${this.editCardId}`)
             if (result) {
                 this.editInput.value = result.title
+                await Sidebar.getBalance()
             }
         } catch (e) {
             console.log(e)

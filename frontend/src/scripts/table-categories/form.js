@@ -1,5 +1,6 @@
 import {CustomHttp} from "../../../services/custom-http.js";
 import config from "../../../config/config.js";
+import {Sidebar} from "../sidebar.js";
 
 export class Form {
 
@@ -29,7 +30,6 @@ export class Form {
             const saveBtn = document.getElementById('save')
             saveBtn.innerText = 'Сохранить'
             saveBtn.onclick = () => this.edit()
-
             document.getElementById('cancel').onclick = () => location.href = '#/table-categories'
 
             this.getOptionsById()
@@ -55,7 +55,7 @@ export class Form {
 
             this.createFormValue = {
                 type: this.selectType.value,
-                amount: this.amount.value,
+                amount: +(this.amount.value),
                 date: this.date.value,
                 comment: this.comment.value,
                 category_id: +(this.selectCategory.value),
@@ -68,6 +68,8 @@ export class Form {
     }
 
     async getCategories() {
+        // await Sidebar.updateBalance(0)
+
         if (this.urlSelectType) {
             try {
                 const result = await CustomHttp.request(`${config.host}/categories/${this.urlSelectType}`)
@@ -76,6 +78,7 @@ export class Form {
                     if (result.length === 0) {
                         console.log('Категорий нет!')
                     }
+                    await Sidebar.getBalance()
                 }
             } catch (e) {
                 console.log(e)
@@ -102,13 +105,28 @@ export class Form {
     }
 
     async create() {
+
+        const currentBalance = await Sidebar.getBalance()
+        console.log('currentBalance', currentBalance)
+
+        if (this.selectType.value === 'income') {
+            this.value = currentBalance + +(this.amount.value)
+        } else {
+            this.value = currentBalance - +(this.amount.value)
+        }
+        console.log(+(this.amount.value))
+        console.log(this.value)
         try {
             const result = await CustomHttp.request(`${config.host}/operations`, 'POST', this.createFormValue)
             if (result) {
                 if (result.error) {
                     alert(result.message)
                 }
-                location.href = '#/table-categories'
+                if (result && !result.error) {
+                    await Sidebar.updateBalance(this.value)
+                    await Sidebar.getBalance()
+                    location.href = '#/table-categories'
+                }
             }
         } catch (e) {
             console.log(e)

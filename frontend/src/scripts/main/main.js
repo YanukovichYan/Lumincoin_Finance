@@ -1,5 +1,6 @@
 import config from "../../../config/config.js";
 import {CustomHttp} from "../../../services/custom-http.js";
+import {Sidebar} from "../sidebar.js";
 
 export class Main {
 
@@ -56,6 +57,7 @@ export class Main {
             const result = await CustomHttp.request(`${config.host}/operations?period=${this.filterValue}${this.dateInterval}`)
             if (result) {
                 this.operations = result
+                await Sidebar.getBalance()
                 // console.log('this.operations', this.operations)
                 this.separationCategories()
             }
@@ -193,8 +195,8 @@ export class Main {
             return el.type === 'expense'
         })
 
-        // console.log('incomeOperation', incomeOperation)
-        // console.log('expenseOperation', expenseOperation)
+        console.log('incomeOperation', incomeOperation)
+        console.log('expenseOperation', expenseOperation)
 
         const newObjectIncome = incomeOperation.reduce((object, operation) => {
             if (object[operation.category]) {
@@ -214,11 +216,11 @@ export class Main {
             return object
         }, {})
 
-        // console.log('newObjectIncome', newObjectIncome)
-        // console.log('newObjectExpense', newObjectExpense)
+        console.log('newObjectIncome', newObjectIncome)
+        console.log('newObjectExpense', newObjectExpense)
 
-        // console.log('Object.entries(income)', Object.entries(newObjectIncome))
-        // console.log('Object.entries(expense)', Object.entries(newObjectExpense))
+        console.log('Object.entries(income)', Object.entries(newObjectIncome))
+        console.log('Object.entries(expense)', Object.entries(newObjectExpense))
 
         Object.entries(newObjectIncome).forEach(category => {
             this.categoriesIncome.push(category[0])
@@ -228,8 +230,8 @@ export class Main {
             this.categoriesExpense.push(category[0])
         })
 
-        // console.log('this.categoriesIncome', this.categoriesIncome)
-        // console.log('this.categoriesExpense', this.categoriesExpense)
+        console.log('this.categoriesIncome', this.categoriesIncome)
+        console.log('this.categoriesExpense', this.categoriesExpense)
 
         Object.entries(newObjectIncome).forEach(category => {
             let amount = 0
@@ -247,8 +249,8 @@ export class Main {
             this.expenseDataAmount.push(amount)
         })
 
-        // console.log('incomeDataAmount', this.incomeDataAmount)
-        // console.log('expenseDataAmount', this.expenseDataAmount)
+        console.log('incomeDataAmount', this.incomeDataAmount)
+        console.log('expenseDataAmount', this.expenseDataAmount)
 
         if (this.incomeDataAmount.length) {
             this.incomeChartShow()
